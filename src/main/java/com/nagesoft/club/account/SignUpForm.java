@@ -1,6 +1,7 @@
 package com.nagesoft.club.account;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.*;
 
@@ -8,7 +9,8 @@ import javax.validation.constraints.*;
 public class SignUpForm {
 
     @NotBlank
-    @Min(3) @Max(10)
+    @Length(min = 3, max = 10)
+    @Pattern(regexp = "^[a-zㄱ-힣0-9-_]{3,20}$")
     private String nickname;
 
     @NotBlank
@@ -16,7 +18,7 @@ public class SignUpForm {
     private String email;
 
     @NotBlank
-    @Min(8)
+    @Length(min = 3, max = 50)
     private String password;
 
 }

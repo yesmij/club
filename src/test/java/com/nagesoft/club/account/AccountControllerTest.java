@@ -28,4 +28,15 @@ class AccountControllerTest {
                 .andDo(print());
     }
 
+    @Test
+    void signUpSave() {
+        SignUpForm signUpForm = new SignUpForm();
+        signUpForm.setEmail("yesmij@gmial.com");
+        signUpForm.setNickname("santiago");
+        signUpForm.setPassword("1234");
+//        mockMvc.perform(post("/sign-up").pa
+//                .andExpect(status().isOk())
+//                .a
+    }
+
 }
