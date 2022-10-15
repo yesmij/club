@@ -5,6 +5,7 @@ import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter @Setter
 @Entity @EqualsAndHashCode(of = "id")
@@ -40,4 +41,8 @@ public class Account {
     private boolean studyEnrollmentResultByWeb;
     private boolean studyUpdatedByEmai;
     private boolean studyUpdatedByWeb;
+
+    public void createEmailToken() {
+        this.emailCheckToken = UUID.randomUUID().toString();
+    }
 }

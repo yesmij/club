@@ -1,6 +1,9 @@
 package com.nagesoft.club.account;
 
+import com.nagesoft.club.ConsoleMailSender;
 import com.nagesoft.club.domain.Account;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -17,6 +20,12 @@ public class AccountController {
 
     private AccountService accountService;
     private SignUpFormValidator signUpFormValidator;
+    private ConsoleMailSender mailSender;
+
+    @InitBinder("signUpForm")
+    public void init(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(signUpFormValidator);
+    }
 
 
     public AccountController(AccountService accountService, SignUpFormValidator signUpFormValidator) {
@@ -43,11 +52,18 @@ public class AccountController {
         Account account = new Account();
         account.setNickname(signUpForm.getNickname());
         account.setEmail(signUpForm.getEmail());
-        account.setPassword(signUpForm.getPassword());
+        account.setPassword(signUpForm.getPassword());  // todo password Encoding
         account.setEmailChecked(false);
-        accountService.save(account);
+        Account newAccount = accountService.save(account);
 
         // 메일 발송
+        newAccount.createEmailToken();                  // todo DB에 저장은 언제?
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(newAccount.getEmail());
+        mailMessage.setSubject("会員　登録　メール　確認");
+        mailMessage.setText("/check-email-token?emailToken=" + newAccount.getEmailCheckToken() +
+                "&email=" + newAccount.getEmail());
+        mailSender.send(mailMessage);
 
         return "redirect:/";
     }

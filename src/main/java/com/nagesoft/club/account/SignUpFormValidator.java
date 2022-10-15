@@ -18,8 +18,8 @@ public class SignUpFormValidator implements Validator {
     }
 
     @Override
-    public void validate(Object o, Errors errors) {
-        SignUpForm signUpForm = (SignUpForm) errors;
+    public void validate(Object object, Errors errors) {
+        SignUpForm signUpForm = (SignUpForm) object;
         if(accountRepository.existsByNickname(signUpForm.getNickname())) {
             errors.rejectValue("nickname", "invalid nickname", new Object[]{signUpForm.getNickname()}, "닉네임이 이미 있습니다");
         }
