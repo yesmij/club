@@ -2,6 +2,7 @@ package com.nagesoft.club.account;
 
 import com.nagesoft.club.ConsoleMailSender;
 import com.nagesoft.club.domain.Account;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
@@ -15,12 +16,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
 
+@Slf4j
 @Controller
 public class AccountController {
 
     private AccountService accountService;
     private SignUpFormValidator signUpFormValidator;
-    private ConsoleMailSender mailSender;
+    private JavaMailSender mailSender;
 
     @InitBinder("signUpForm")
     public void init(WebDataBinder webDataBinder) {
@@ -28,9 +30,10 @@ public class AccountController {
     }
 
 
-    public AccountController(AccountService accountService, SignUpFormValidator signUpFormValidator) {
+    public AccountController(AccountService accountService, SignUpFormValidator signUpFormValidator, JavaMailSender mailSender) {
         this.accountService = accountService;
         this.signUpFormValidator = signUpFormValidator;
+        this.mailSender = mailSender;
     }
 
 
@@ -55,9 +58,10 @@ public class AccountController {
         account.setPassword(signUpForm.getPassword());  // todo password Encoding
         account.setEmailChecked(false);
         Account newAccount = accountService.save(account);
+        log.info("new Account = {}", newAccount.getEmail());
 
         // 메일 발송
-        newAccount.createEmailToken();                  // todo DB에 저장은 언제?
+        newAccount.createEmailToken();                  // todo [search] DB에 저장은 언제?
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(newAccount.getEmail());
         mailMessage.setSubject("会員　登録　メール　確認");
