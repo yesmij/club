@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -14,6 +15,8 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final JavaMailSender mailSender;
+
+    private final PasswordEncoder passwordEncoder;
 
     public Account save(Account account) {
         return accountRepository.save(account);
@@ -29,9 +32,10 @@ public class AccountService {
 
     private Account createAccount(SignUpForm signUpForm) {
         Account account = new Account();                // todo Builder Pattern
+        //account.passwordEncode(signUpForm.getPassword());
         account.setNickname(signUpForm.getNickname());
         account.setEmail(signUpForm.getEmail());
-        account.setPassword(signUpForm.getPassword());  // todo password Encoding
+        account.setPassword(passwordEncoder.encode(signUpForm.getPassword()));  // todo password Encoding
         account.setEmailChecked(false);
         Account newAccount = accountRepository.save(account);
         log.info("new Account = {}", newAccount.getEmail());

@@ -1,5 +1,7 @@
 package com.nagesoft.club.account;
 
+import com.nagesoft.club.domain.Account;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +14,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
@@ -22,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+@Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc
 class AccountControllerTest {
@@ -56,16 +60,23 @@ class AccountControllerTest {
     @DisplayName("회원가입 - 성공")
     @Test
     void signUpForm_success() throws Exception {
+        String email = "yesmij@naver.com";
         mockMvc.perform(post("/sign-up")
                         .param("nickname", "santiago")
-                        .param("email", "yesmij@naver.com")
+                        .param("email", email)
                         .param("password", "1111")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"));
 
-        Assertions.assertThat(accountRepository.existsByEmail("yesmij@naver.com")).isTrue();
+        Assertions.assertThat(accountRepository.existsByEmail(email)).isTrue();
         then(javaMailSender).should().send(any(SimpleMailMessage.class));
+        
+        //password encoding
+        Account account = accountRepository.findByEmail(email);
+        assertNotNull(account);
+        log.info(account.getPassword());
+        assertNotEquals("1111", account.getPassword());
     }
 
 }

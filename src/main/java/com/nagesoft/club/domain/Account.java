@@ -2,6 +2,8 @@ package com.nagesoft.club.domain;
 
 import lombok.*;
 import org.hibernate.annotations.Fetch;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,6 +14,8 @@ import java.util.UUID;
 @AllArgsConstructor @NoArgsConstructor
 public class Account {
 
+//    @Autowired PasswordEncoder passwordEncoder;
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -21,6 +25,7 @@ public class Account {
     private String emailCheckToken;
     private boolean emailChecked;
 
+    @Lob
     private String password;
     @Column(unique = true)
     private String nickname;
@@ -45,4 +50,8 @@ public class Account {
     public void createEmailToken() {
         this.emailCheckToken = UUID.randomUUID().toString();
     }
+
+//    public void passwordEncode(String rawPassword) {
+//        this.password = passwordEncoder.encode(rawPassword);
+//    }
 }
