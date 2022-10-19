@@ -1,14 +1,12 @@
 package com.nagesoft.club.account;
 
+import com.nagesoft.club.domain.Account;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -18,15 +16,17 @@ public class AccountController {
 
     private AccountService accountService;
     private SignUpFormValidator signUpFormValidator;
+    private AccountRepository accountRepository;
 
     @InitBinder("signUpForm")
     public void init(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(signUpFormValidator);
     }
 
-    public AccountController(AccountService accountService, SignUpFormValidator signUpFormValidator) {
+    public AccountController(AccountService accountService, SignUpFormValidator signUpFormValidator, AccountRepository accountRepository) {
         this.accountService = accountService;
         this.signUpFormValidator = signUpFormValidator;
+        this.accountRepository = accountRepository;
     }
 
     @GetMapping("/sign-up")
@@ -46,6 +46,30 @@ public class AccountController {
         accountService.accountCreationProcess(signUpForm);
 
         return "redirect:/";
+    }
+
+    @GetMapping("/check-email-token")
+    public String checkMail(@RequestParam String emailToken, @RequestParam String email, Model model) {
+        if(email == null || emailToken == null) {
+            model.addAttribute("error", "token or email error");
+            return "account/checked-email-token";
+        }
+
+        // 이메일 통한 회원 검사
+        Account account = accountRepository.findByEmail(email);
+        if(account == null) {
+            model.addAttribute("error", "email error");
+            return "account/checked-email-token";
+        }
+        // 이메일 토큰 검사
+        if(!emailToken.equals(account.getEmailCheckToken())) {
+            model.addAttribute("error", "token error");
+            return "account/checked-email-token";
+        }
+
+        model.addAttribute("numberOfCount", accountRepository.count());
+        model.addAttribute("nickname", account.getNickname());
+        return "account/checked-email-token";
     }
 
 }

@@ -7,6 +7,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -22,11 +23,12 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
+    @Transactional
     public void accountCreationProcess(SignUpForm signUpForm) {
         Account newAccount = createAccount(signUpForm);
 
         // 메일 발송
-        newAccount.createEmailToken();                  // todo [search] DB에 저장은 언제?
+        newAccount.createEmailToken();                  // transaction으로 DB저장 (detached vs active)
         accountConfirmMail(newAccount);
     }
 
