@@ -19,10 +19,6 @@ public class AccountService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public Account save(Account account) {
-        return accountRepository.save(account);
-    }
-
     @Transactional
     public void accountCreationProcess(SignUpForm signUpForm) {
         Account newAccount = createAccount(signUpForm);
@@ -33,11 +29,11 @@ public class AccountService {
     }
 
     private Account createAccount(SignUpForm signUpForm) {
-        Account account = new Account();                // todo Builder Pattern
+        Account account = new Account();
         //account.passwordEncode(signUpForm.getPassword());
         account.setNickname(signUpForm.getNickname());
         account.setEmail(signUpForm.getEmail());
-        account.setPassword(passwordEncoder.encode(signUpForm.getPassword()));  // todo password Encoding
+        account.setPassword(passwordEncoder.encode(signUpForm.getPassword()));  // todo (확인) 인코딩을 여기서 해야 하는지?
         account.setEmailChecked(false);
         Account newAccount = accountRepository.save(account);
         log.info("new Account = {}", newAccount.getEmail());

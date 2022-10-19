@@ -1,14 +1,12 @@
 package com.nagesoft.club.domain;
 
 import lombok.*;
-import org.hibernate.annotations.Fetch;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Builder
 @Getter @Setter
 @Entity @EqualsAndHashCode(of = "id")
 @AllArgsConstructor @NoArgsConstructor
@@ -44,11 +42,16 @@ public class Account {
     private boolean studyCreatedByWeb;
     private boolean studyEnrollmentResultByEmail;
     private boolean studyEnrollmentResultByWeb;
-    private boolean studyUpdatedByEmai;
+    private boolean studyUpdatedByEmail;
     private boolean studyUpdatedByWeb;
 
     public void createEmailToken() {
         this.emailCheckToken = UUID.randomUUID().toString();
+    }
+
+    public void completSignUp() {
+        this.emailChecked = true;
+        this.joinedAt = LocalDateTime.now();
     }
 
 //    public void passwordEncode(String rawPassword) {

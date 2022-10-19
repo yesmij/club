@@ -13,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,9 +23,9 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Transactional
 @Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -32,6 +33,7 @@ class AccountControllerTest {
 
     @Autowired private MockMvc mockMvc;
     @Autowired private AccountRepository accountRepository;
+    @Autowired private AccountService accountService ;
 
     @MockBean JavaMailSender javaMailSender;
 
@@ -77,6 +79,37 @@ class AccountControllerTest {
         assertNotNull(account);
         log.info(account.getPassword());
         assertNotEquals("1111", account.getPassword());
+    }
+
+    @DisplayName("이메일 체크 확인 - 오류")
+    @Test
+    void checkEmail_fail() throws Exception {
+        mockMvc.perform(get("/check-email-token")
+                .param("emailToken", "aaaaa")
+                .param("email", "aaaa"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("error"))
+                .andExpect(view().name("account/checked-email-token"));
+    }
+
+    @DisplayName("이메일 체크 확인 - 성공")
+    @Test
+    void checkEmail_success() throws Exception {
+        // 회원가입 -> 토큰 생성 -> 이메일,토큰 파라미터 -> 비교
+        SignUpForm signUpForm = SignUpForm.builder()
+                .nickname("santiago")
+                .email("yesmij@naver.com")
+                .password("1111").build();
+        accountService.accountCreationProcess(signUpForm);
+        Account savedAccount = accountRepository.findByEmail("yesmij@naver.com");
+
+                mockMvc.perform(get("/check-email-token")
+                        .param("emailToken", savedAccount.getEmailCheckToken())
+                        .param("email", savedAccount.getEmail()))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeDoesNotExist("error"))
+                .andExpect(model().attributeExists("nickname"))
+                .andExpect(model().attributeExists("numberOfCount"));
     }
 
 }

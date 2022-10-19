@@ -9,6 +9,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 
 @Slf4j
 @Controller
@@ -66,6 +67,8 @@ public class AccountController {
             model.addAttribute("error", "token error");
             return "account/checked-email-token";
         }
+
+        account.completSignUp();  // todo (확인) 트랜잭션 대상인지 확인 필요!!
 
         model.addAttribute("numberOfCount", accountRepository.count());
         model.addAttribute("nickname", account.getNickname());
