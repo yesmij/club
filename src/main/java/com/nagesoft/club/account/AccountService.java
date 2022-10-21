@@ -5,9 +5,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -20,12 +27,14 @@ public class AccountService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void accountCreationProcess(SignUpForm signUpForm) {
+    public Account accountCreationProcess(SignUpForm signUpForm) {
         Account newAccount = createAccount(signUpForm);
 
         // 메일 발송
         newAccount.createEmailToken();                  // transaction으로 DB저장 (detached vs active)
         accountConfirmMail(newAccount);
+
+        return newAccount;
     }
 
     private Account createAccount(SignUpForm signUpForm) {
@@ -49,4 +58,12 @@ public class AccountService {
         mailSender.send(mailMessage);
     }
 
+    public void login(Account account) {
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+                account.getNickname(),
+                account.getPassword(),
+                List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        SecurityContext context = SecurityContextHolder.getContext();
+        context.setAuthentication(token);
+    }
 }

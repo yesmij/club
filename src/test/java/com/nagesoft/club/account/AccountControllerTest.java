@@ -20,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -43,7 +45,7 @@ class AccountControllerTest {
         mockMvc.perform(get("/sign-up"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("account/sign-up"))
-                .andDo(print());
+                .andExpect(unauthenticated());
     }
 
     @DisplayName("회원가입 - 실패")
@@ -56,7 +58,8 @@ class AccountControllerTest {
                         .with(csrf()))
 
                 .andExpect(status().isOk())
-                .andExpect(view().name("account/sign-up"));
+                .andExpect(view().name("account/sign-up"))
+                .andExpect(unauthenticated());
     }
 
     @DisplayName("회원가입 - 성공")
@@ -69,7 +72,8 @@ class AccountControllerTest {
                         .param("password", "1111")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/"));
+                .andExpect(view().name("redirect:/"))
+                .andExpect(authenticated().withUsername("santiago"));
 
         Assertions.assertThat(accountRepository.existsByEmail(email)).isTrue();
         then(javaMailSender).should().send(any(SimpleMailMessage.class));
@@ -89,7 +93,8 @@ class AccountControllerTest {
                 .param("email", "aaaa"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("error"))
-                .andExpect(view().name("account/checked-email-token"));
+                .andExpect(view().name("account/checked-email-token"))
+                .andExpect(unauthenticated());
     }
 
     @DisplayName("이메일 체크 확인 - 성공")
@@ -109,7 +114,8 @@ class AccountControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist("error"))
                 .andExpect(model().attributeExists("nickname"))
-                .andExpect(model().attributeExists("numberOfCount"));
+                .andExpect(model().attributeExists("numberOfCount"))
+                .andExpect(authenticated().withUsername("santiago"));
     }
 
 }

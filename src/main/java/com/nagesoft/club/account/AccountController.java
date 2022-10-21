@@ -44,7 +44,10 @@ public class AccountController {
         // 메일 중복 & 닉네임 중복 검증
 
         // 회원 가입
-        accountService.accountCreationProcess(signUpForm);
+        Account account = accountService.accountCreationProcess(signUpForm);
+
+        // 자동 로그인 처리
+        accountService.login(account);
 
         return "redirect:/";
     }
@@ -72,6 +75,9 @@ public class AccountController {
 
         model.addAttribute("numberOfCount", accountRepository.count());
         model.addAttribute("nickname", account.getNickname());
+
+        // 자동 로그인 처리
+        accountService.login(account);
         return "account/checked-email-token";
     }
 
