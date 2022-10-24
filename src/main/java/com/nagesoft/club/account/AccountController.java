@@ -52,7 +52,7 @@ public class AccountController {
         return "redirect:/";
     }
 
-    @GetMapping("/check-email-token")
+    @GetMapping("/check-email")
     public String checkMail(@RequestParam String emailToken, @RequestParam String email, Model model) {
         if(email == null || emailToken == null) {
             model.addAttribute("error", "token or email error");

@@ -53,14 +53,15 @@ public class AccountService {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(newAccount.getEmail());
         mailMessage.setSubject("会員　登録　メール　確認");
-        mailMessage.setText("/check-email-token?emailToken=" + newAccount.getEmailCheckToken() +
+        mailMessage.setText("/check-email?emailToken=" + newAccount.getEmailCheckToken() +
                 "&email=" + newAccount.getEmail());
         mailSender.send(mailMessage);
     }
 
     public void login(Account account) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                account.getNickname(),
+//                account.getNickname(),
+                new UserAccount(account),
                 account.getPassword(),
                 List.of(new SimpleGrantedAuthority("ROLE_USER")));
         SecurityContext context = SecurityContextHolder.getContext();
