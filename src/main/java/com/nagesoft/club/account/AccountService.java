@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -49,12 +50,13 @@ public class AccountService {
         return newAccount;
     }
 
-    private void accountConfirmMail(Account newAccount) {
+    public void accountConfirmMail(Account newAccount) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(newAccount.getEmail());
         mailMessage.setSubject("会員　登録　メール　確認");
         mailMessage.setText("/check-email?emailToken=" + newAccount.getEmailCheckToken() +
                 "&email=" + newAccount.getEmail());
+        newAccount.setEmailSendAt(LocalDateTime.now());
         mailSender.send(mailMessage);
     }
 

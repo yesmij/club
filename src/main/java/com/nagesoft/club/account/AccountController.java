@@ -53,9 +53,11 @@ public class AccountController {
     }
 
     @GetMapping("/check-email")
-    public String checkMail(@RequestParam String emailToken, @RequestParam String email, Model model) {
+    public String checkMail(@RequestParam(required = false) String emailToken, @RequestParam String email, Model model) {
+        System.out.println("email = " + email);
         if(email == null || emailToken == null) {
             model.addAttribute("error", "token or email error");
+            model.addAttribute("email", email);
             return "account/checked-email-token";
         }
 
@@ -71,7 +73,7 @@ public class AccountController {
             return "account/checked-email-token";
         }
 
-        account.completSignUp();  // todo (확인) 트랜잭션 대상인지 확인 필요!!
+        account.completeSignUp();  // todo (확인) 트랜잭션 대상인지 확인 필요!!
 
         model.addAttribute("numberOfCount", accountRepository.count());
         model.addAttribute("nickname", account.getNickname());
@@ -81,4 +83,28 @@ public class AccountController {
         return "account/checked-email-token";
     }
 
+
+    @GetMapping("/resend-confirm-email")
+    public String resend(@RequestParam String email, Model model) {
+        if(email == null ) {
+            model.addAttribute("error", "token or email error");
+            return "account/checked-email-token";
+        }
+
+        Account account = accountRepository.findByEmail(email);
+
+        // 인증 이메일 다시 전송 가능한지 체크
+        if(LocalDateTime.now().isBefore(account.getEmailSendAt().plusHours(1))) {
+            model.addAttribute("error", "메일 발송 후 1시간이 지나지 않았습니다. 다시 확인해주세요.");
+            return "account/checked-email-token";
+        } else {
+            accountService.accountConfirmMail(account);
+        }
+
+        // 보낼 수 있으면 전송 , 첫 페이지 링크
+
+        // 보낼 수 없으면, 에러 메시지를 담아서, 이메일 보낸 페이지로 전송
+
+        return "redirect:/";
+    }
 }

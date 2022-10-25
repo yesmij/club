@@ -22,6 +22,7 @@ public class Account {
 
     private String emailCheckToken;
     private boolean emailChecked;
+    private LocalDateTime emailSendAt;
 
     @Lob
     private String password;
@@ -49,7 +50,7 @@ public class Account {
         this.emailCheckToken = UUID.randomUUID().toString();
     }
 
-    public void completSignUp() {
+    public void completeSignUp() {
         this.emailChecked = true;
         this.joinedAt = LocalDateTime.now();
     }

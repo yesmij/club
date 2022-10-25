@@ -9,6 +9,8 @@
         <div class="alert alert-danger" role="alert">
             이메일 확인 링크가 정확하지 않습니다.
         </div>
+        <div class="text-info">회원님이 가입하신 이메일은 <span th:text="${email}">email</span>입니다. </div>
+        <button><a th:href="@{/resend-confirm-email(email=${email})}">재발송</a></button>
     </div>
 
     <div class="py-5 text-center" th:if="${error == null}">
