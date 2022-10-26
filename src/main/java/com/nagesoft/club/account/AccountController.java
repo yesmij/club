@@ -52,7 +52,7 @@ public class AccountController {
         return "redirect:/";
     }
 
-    @GetMapping("/check-email")
+    @GetMapping("/check-email-token")
     public String checkMail(@RequestParam(required = false) String emailToken, @RequestParam String email, Model model) {
         System.out.println("email = " + email);
         if(email == null || emailToken == null) {
@@ -83,20 +83,28 @@ public class AccountController {
         return "account/checked-email-token";
     }
 
+    @RequestMapping("/check-email")
+    public String checkEmail(@CurrentUser Account account, Model model) {
+        if(account != null) {
+            model.addAttribute(account);
+        }
+        return "account/check-email";
+
+    }
+
 
     @GetMapping("/resend-confirm-email")
-    public String resend(@RequestParam String email, Model model) {
-        if(email == null ) {
+    public String resend(@CurrentUser Account account, Model model) {
+        if(account == null ) {
             model.addAttribute("error", "token or email error");
             return "account/checked-email-token";
         }
 
-        Account account = accountRepository.findByEmail(email);
-
         // 인증 이메일 다시 전송 가능한지 체크
-        if(LocalDateTime.now().isBefore(account.getEmailSendAt().plusHours(1))) {
+//        if(LocalDateTime.now().isBefore(account.getEmailSendAt().plusHours(1))) {
+        if(LocalDateTime.now().isBefore(account.getEmailSendAt().plusSeconds(10))) {
             model.addAttribute("error", "메일 발송 후 1시간이 지나지 않았습니다. 다시 확인해주세요.");
-            return "account/checked-email-token";
+            return "account/check-email";
         } else {
             accountService.accountConfirmMail(account);
         }

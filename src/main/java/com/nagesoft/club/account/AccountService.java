@@ -54,7 +54,7 @@ public class AccountService {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(newAccount.getEmail());
         mailMessage.setSubject("会員　登録　メール　確認");
-        mailMessage.setText("/check-email?emailToken=" + newAccount.getEmailCheckToken() +
+        mailMessage.setText("/check-email-token?emailToken=" + newAccount.getEmailCheckToken() +
                 "&email=" + newAccount.getEmail());
         newAccount.setEmailSendAt(LocalDateTime.now());
         mailSender.send(mailMessage);
