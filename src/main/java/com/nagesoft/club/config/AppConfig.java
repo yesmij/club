@@ -1,4 +1,4 @@
-package com.nagesoft.club;
+package com.nagesoft.club.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
