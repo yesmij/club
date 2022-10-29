@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -47,7 +46,7 @@ public class AccountService implements UserDetailsService {
         account.setNickname(signUpForm.getNickname());
         account.setEmail(signUpForm.getEmail());
         account.setPassword(passwordEncoder.encode(signUpForm.getPassword()));  // todo (확인) 인코딩을 여기서 해야 하는지?
-        account.setEmailChecked(false);
+        account.setEmailVerified(false);
         Account newAccount = accountRepository.save(account);
         log.info("new Account = {}", newAccount.getEmail());
         return newAccount;

@@ -21,7 +21,7 @@ public class Account {
     private String email;
 
     private String emailCheckToken;
-    private boolean emailChecked;
+    private boolean emailVerified;
     private LocalDateTime emailSendAt;
 
     @Lob
@@ -30,7 +30,7 @@ public class Account {
     private String nickname;
 
     @Lob @Basic(fetch = FetchType.EAGER)
-    private String profileImg;
+    private String profileImage;
 
     private String bio;
     private String url;
@@ -51,7 +51,7 @@ public class Account {
     }
 
     public void completeSignUp() {
-        this.emailChecked = true;
+        this.emailVerified = true;
         this.joinedAt = LocalDateTime.now();
     }
 

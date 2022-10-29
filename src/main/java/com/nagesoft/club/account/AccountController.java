@@ -9,6 +9,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -114,5 +115,24 @@ public class AccountController {
         // 보낼 수 없으면, 에러 메시지를 담아서, 이메일 보낸 페이지로 전송
 
         return "redirect:/";
+    }
+
+    @GetMapping("/profile/{nickname}")
+    public String profileView(@PathVariable String nickname, @CurrentUser Account account, Model model) {
+
+        // nickname 사용자 확인 -> not IllegalArgumentException
+        Account byNickname = accountRepository.findByNickname(nickname);
+        if(byNickname == null) {
+            new IllegalArgumentException(nickname + "사용자가 없습니다.");
+        }
+
+        if(account.getNickname().equals(nickname)) {
+            model.addAttribute("isOwner", true);
+        }
+        model.addAttribute(byNickname);
+
+        // nickname 사용자와 현재 유저가 맞는지 확인 -> isOwner & nickname
+
+        return "account/profile";
     }
 }
