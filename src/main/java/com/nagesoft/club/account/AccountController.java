@@ -74,7 +74,8 @@ public class AccountController {
             return "account/checked-email-token";
         }
 
-        account.completeSignUp();  // todo (확인) 트랜잭션 대상인지 확인 필요!!
+        //account.completeSignUp();  // todo (확인) 트랜잭션 대상인지 확인 필요!!
+        accountService.completeSignUp(account);
 
         model.addAttribute("numberOfCount", accountRepository.count());
         model.addAttribute("nickname", account.getNickname());
@@ -123,12 +124,12 @@ public class AccountController {
         // nickname 사용자 확인 -> not IllegalArgumentException
         Account byNickname = accountRepository.findByNickname(nickname);
         if(byNickname == null) {
-            new IllegalArgumentException(nickname + "사용자가 없습니다.");
+            throw new IllegalArgumentException(nickname + "사용자가 없습니다.");
         }
 
-        if(account.getNickname().equals(nickname)) {
-            model.addAttribute("isOwner", true);
-        }
+//        if(byNickname.equals(account)) {
+            model.addAttribute("isOwner", byNickname.equals(account));
+//        }
         model.addAttribute(byNickname);
 
         // nickname 사용자와 현재 유저가 맞는지 확인 -> isOwner & nickname
