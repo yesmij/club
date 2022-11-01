@@ -1,6 +1,7 @@
 package com.nagesoft.club.account;
 
 import com.nagesoft.club.domain.Account;
+import com.nagesoft.club.settings.Profile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
@@ -88,5 +89,13 @@ public class AccountService implements UserDetailsService {
 
     public void completeSignUp(Account account) {
         account.completeSignUp();
+    }
+
+    public void updateProfile(Account account, Profile profile) {
+        account.setBio(profile.getBio());
+        account.setLocation(profile.getLocation());
+        account.setOccupation(profile.getOccupation());
+        account.setUrl(profile.getUrl());
+        accountRepository.save(account);
     }
 }
