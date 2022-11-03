@@ -25,7 +25,7 @@ public class SettingsController {
     public String profileUpdate(@CurrentUser Account account, Model model) {
 
 //        Account byNickname = accountRepository.findByNickname(account.getNickname());
-        model.addAttribute(new Profile(account.getBio(), account.getUrl(), account.getOccupation(), account.getLocation()));
+        model.addAttribute(new Profile(account));
         model.addAttribute(account);
 
         return "settings/profile";

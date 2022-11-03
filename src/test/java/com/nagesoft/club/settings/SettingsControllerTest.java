@@ -78,7 +78,8 @@ class SettingsControllerTest {
         Account updateAccount = accountRepository.findByNickname("santiago");
 
 //        Assertions.assertThat(account).isNotEqualTo(updateAccount);
-        Assertions.assertThat("null").isNotEqualTo(updateAccount.getBio());
+//        Assertions.assertThat("null").isNotEqualTo(updateAccount.getBio());
+        assertNull(updateAccount.getBio());
         assertNull(updateAccount.getOccupation());
     }
 }
