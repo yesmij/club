@@ -5,6 +5,7 @@ import com.nagesoft.club.account.AccountService;
 import com.nagesoft.club.account.CurrentUser;
 import com.nagesoft.club.domain.Account;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -47,5 +48,24 @@ public class SettingsController {
 
 //        return "settings/profile";
         return "redirect:/settings/profile";
+    }
+
+    @GetMapping("/settings/password")
+    public String passwordForm(@CurrentUser Account account, Model model) {
+        model.addAttribute("account");
+        return "settings/password";
+    }
+
+    @PostMapping("/Settings/password")
+    public String passwordUpdate(@CurrentUser Account account, @ModelAttribute @Valid PasswordForm passwordForm
+                , Errors errors, RedirectAttributes attributes, Model model) {
+        if(errors.hasErrors()){
+            model.addAttribute("account");
+            return "settings/password";
+        }
+
+        accountService.updatePassword(account, passwordForm.getChangedPassword());
+        attributes.addFlashAttribute("message", "패스워드를 변경했습니다");
+        return "redirect:/settings/password";
     }
 }
