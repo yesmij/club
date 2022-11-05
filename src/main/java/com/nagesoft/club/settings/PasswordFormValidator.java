@@ -12,7 +12,7 @@ public class PasswordFormValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         PasswordForm passwordForm = (PasswordForm) target;
-        if(!passwordForm.getReChangedPassword().equals(passwordForm.getReChangedPassword())) {
+        if(!passwordForm.getNewPassword().equals(passwordForm.getNewPasswordConfirm())) {
             errors.rejectValue("new password", "wrong.value", "입력한 패스워드가 맞지 않습니다.");
         }
     }

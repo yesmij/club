@@ -1,11 +1,9 @@
 package com.nagesoft.club.settings;
 
-import com.nagesoft.club.account.AccountRepository;
 import com.nagesoft.club.account.AccountService;
 import com.nagesoft.club.account.CurrentUser;
 import com.nagesoft.club.domain.Account;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -64,7 +62,7 @@ public class SettingsController {
             return "settings/password";
         }
 
-        accountService.updatePassword(account, passwordForm.getChangedPassword());
+        accountService.updatePassword(account, passwordForm.getNewPassword());
         attributes.addFlashAttribute("message", "패스워드를 변경했습니다");
         return "redirect:/settings/password";
     }

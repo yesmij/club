@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
@@ -81,5 +82,14 @@ class SettingsControllerTest {
 //        Assertions.assertThat("null").isNotEqualTo(updateAccount.getBio());
         assertNull(updateAccount.getBio());
         assertNull(updateAccount.getOccupation());
+    }
+
+    @WithUserDetails(value = "santiago", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("패스워드 수정폼")
+    @Test
+    void passwordForm() throws Exception {
+        mockMvc.perform(get("/settings/password"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("settings/password"));
     }
 }
