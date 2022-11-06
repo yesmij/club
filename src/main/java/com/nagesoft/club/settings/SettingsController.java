@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -19,6 +21,11 @@ import javax.validation.Valid;
 public class SettingsController {
 
     private final AccountService accountService;
+
+    @InitBinder("passwordForm")
+    public void initBinder(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(new PasswordFormValidator());
+    }
 
     @GetMapping("/settings/profile")
     public String profileUpdate(@CurrentUser Account account, Model model) {
@@ -50,11 +57,12 @@ public class SettingsController {
 
     @GetMapping("/settings/password")
     public String passwordForm(@CurrentUser Account account, Model model) {
-        model.addAttribute("account");
+        model.addAttribute(account);
+        model.addAttribute("passwordForm", new PasswordForm());
         return "settings/password";
     }
 
-    @PostMapping("/Settings/password")
+    @PostMapping("/settings/password")
     public String passwordUpdate(@CurrentUser Account account, @ModelAttribute @Valid PasswordForm passwordForm
                 , Errors errors, RedirectAttributes attributes, Model model) {
         if(errors.hasErrors()){

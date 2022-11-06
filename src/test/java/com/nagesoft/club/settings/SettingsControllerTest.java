@@ -92,4 +92,31 @@ class SettingsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("settings/password"));
     }
+
+    @WithUserDetails(value = "santiago", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("패스워드 수정 성공")
+    @Test
+    void passwordChange_OK() throws Exception {
+        mockMvc.perform(post("/settings/password")
+                .param("newPassword", "2222")
+                .param("newPasswordConfirm", "2222")
+                .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("message"));
+    }
+
+
+    @WithUserDetails(value = "santiago", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("패스워드 수정 실패")
+    @Test
+    void passwordChange_Fail() throws Exception {
+        mockMvc.perform(post("/settings/password")
+                        .param("newPassword", "22222222")
+                        .param("newPasswordConfirm", "111111111")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("passwordForm"))
+                //.andExpect(model().attributeExists("account"))  // todo 에러 확인 필요
+                .andExpect(model().hasErrors());
+    }
 }
