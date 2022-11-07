@@ -1,6 +1,7 @@
 package com.nagesoft.club.account;
 
 import com.nagesoft.club.domain.Account;
+import com.nagesoft.club.settings.NotificationForm;
 import com.nagesoft.club.settings.Profile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -103,5 +104,16 @@ public class AccountService implements UserDetailsService {
     public void updatePassword(Account account, String changedPassword) {
         account.setPassword(passwordEncoder.encode(changedPassword));
         accountRepository.save(account);
+    }
+
+    public void updateNotifications(Account account, NotificationForm notificationForm) {
+        account.setStudyCreatedByEmail(notificationForm.isStudyCreatedByEmail());
+        account.setStudyCreatedByWeb(notificationForm.isStudyCreatedByWeb());
+        account.setStudyEnrollmentResultByEmail(notificationForm.isStudyEnrollmentResultByEmail());
+        account.setStudyEnrollmentResultByWeb(notificationForm.isStudyEnrollmentResultByWeb());
+        account.setStudyUpdatedByEmail(notificationForm.isStudyUpdatedByEmail());
+        account.setStudyUpdatedByWeb(notificationForm.isStudyUpdatedByWeb());
+        accountRepository.save(account);
+
     }
 }

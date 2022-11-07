@@ -15,6 +15,7 @@ import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -119,4 +120,5 @@ class SettingsControllerTest {
                 //.andExpect(model().attributeExists("account"))  // todo 에러 확인 필요
                 .andExpect(model().hasErrors());
     }
+
 }

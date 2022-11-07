@@ -74,4 +74,26 @@ public class SettingsController {
         attributes.addFlashAttribute("message", "패스워드를 변경했습니다");
         return "redirect:/settings/password";
     }
+
+    @GetMapping("/settings/notifications")
+    public String notiForm(@CurrentUser Account account, Model model) {
+        model.addAttribute(new NotificationForm(account));
+        model.addAttribute(account);
+        return "settings/notifications";
+    }
+
+    @PostMapping("/settings/notifications")
+    public String notiSave(@CurrentUser Account account, Model model, @Valid NotificationForm notificationForm, RedirectAttributes attribute, Errors errors) {
+        if(errors.hasErrors()) {
+            model.addAttribute(account);
+            return "settings/notifications";
+        }
+
+        accountService.updateNotifications(account, notificationForm);
+        model.addAttribute(account);
+        attribute.addFlashAttribute("message", "notification을 수정했습니다.");
+
+        return "redirect:/settings/notifications";
+    }
+
 }
