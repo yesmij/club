@@ -121,4 +121,49 @@ class SettingsControllerTest {
                 .andExpect(model().hasErrors());
     }
 
+    @WithUserDetails(value = "santiago", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("알람 변경 폼")
+    @Test
+    void notification_form() throws Exception {
+        mockMvc.perform(get("/settings/notifications")
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("notificationForm"))
+                .andExpect(view().name("settings/notifications"));
+    }
+
+    @WithUserDetails(value = "santiago", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("알람 변경 성공")
+    @Test
+    void notification_ok() throws Exception {
+        mockMvc.perform(post("/settings/notifications")
+                .param("studyCreatedByEmail", "true")
+                .param("studyCreatedByWeb", "true")
+                .param("studyEnrollmentResultByEmail", "false")
+                .param("studyEnrollmentResultByWeb", "false")
+                .param("studyUpdatedByEmail", "true")
+                .param("studyUpdatedByWeb", "false")
+                .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("message"));
+                //.andExpect(model().attributeExists());
+    }
+
+    @WithUserDetails(value = "santiago", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("알람 변경 fail")
+    @Test
+    void notification_fail() throws Exception {
+        mockMvc.perform(post("/settings/notifications")
+                        .param("studyCreatedByEmail", "1234")
+                        .param("studyCreatedByWeb", "true")
+                        .param("studyEnrollmentResultByEmail", "false")
+                        .param("studyEnrollmentResultByWeb", "false")
+                        .param("studyUpdatedByEmail", "true")
+                        .param("studyUpdatedByWeb", "false")
+                        .with(csrf()))
+                //.andExpect(status().isOk())
+                .andExpect(model().hasErrors());
+        //.andExpect(model().attributeExists());
+    }
+
 }
