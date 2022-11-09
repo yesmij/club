@@ -5,6 +5,7 @@ import com.nagesoft.club.settings.NotificationForm;
 import com.nagesoft.club.settings.Profile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,6 +32,7 @@ public class AccountService implements UserDetailsService {
     private final JavaMailSender mailSender;
 
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
     public Account accountCreationProcess(SignUpForm signUpForm) {
         Account newAccount = createAccount(signUpForm);
@@ -93,11 +95,12 @@ public class AccountService implements UserDetailsService {
     }
 
     public void updateProfile(Account account, Profile profile) {
-        account.setBio(profile.getBio());
-        account.setLocation(profile.getLocation());
-        account.setOccupation(profile.getOccupation());
-        account.setUrl(profile.getUrl());
-        account.setProfileImage(profile.getProfileImage());
+        modelMapper.map(profile, account);
+//        account.setBio(profile.getBio());
+//        account.setLocation(profile.getLocation());
+//        account.setOccupation(profile.getOccupation());
+//        account.setUrl(profile.getUrl());
+//        account.setProfileImage(profile.getProfileImage());
         accountRepository.save(account);
     }
 
@@ -107,12 +110,13 @@ public class AccountService implements UserDetailsService {
     }
 
     public void updateNotifications(Account account, NotificationForm notificationForm) {
-        account.setStudyCreatedByEmail(notificationForm.isStudyCreatedByEmail());
-        account.setStudyCreatedByWeb(notificationForm.isStudyCreatedByWeb());
-        account.setStudyEnrollmentResultByEmail(notificationForm.isStudyEnrollmentResultByEmail());
-        account.setStudyEnrollmentResultByWeb(notificationForm.isStudyEnrollmentResultByWeb());
-        account.setStudyUpdatedByEmail(notificationForm.isStudyUpdatedByEmail());
-        account.setStudyUpdatedByWeb(notificationForm.isStudyUpdatedByWeb());
+        modelMapper.map(notificationForm, account);
+//        account.setStudyCreatedByEmail(notificationForm.isStudyCreatedByEmail());
+//        account.setStudyCreatedByWeb(notificationForm.isStudyCreatedByWeb());
+//        account.setStudyEnrollmentResultByEmail(notificationForm.isStudyEnrollmentResultByEmail());
+//        account.setStudyEnrollmentResultByWeb(notificationForm.isStudyEnrollmentResultByWeb());
+//        account.setStudyUpdatedByEmail(notificationForm.isStudyUpdatedByEmail());
+//        account.setStudyUpdatedByWeb(notificationForm.isStudyUpdatedByWeb());
         accountRepository.save(account);
 
     }

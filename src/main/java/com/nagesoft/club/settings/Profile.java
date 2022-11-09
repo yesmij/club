@@ -9,7 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Size;
 
-@NoArgsConstructor
+//@NoArgsConstructor
 @Data
 public class Profile {
     @Length(max = 10)
@@ -21,11 +21,11 @@ public class Profile {
     private String location;
     private String profileImage;
 
-    public Profile(Account account) {
-        this.bio = account.getBio();
-        this.url = account.getUrl();
-        this.occupation = account.getOccupation();
-        this.location = account.getLocation();
-        this.profileImage = account.getProfileImage();
-    }
+//    public Profile(Account account) {
+//        this.bio = account.getBio();
+//        this.url = account.getUrl();
+//        this.occupation = account.getOccupation();
+//        this.location = account.getLocation();
+//        this.profileImage = account.getProfileImage();
+//    }
 }

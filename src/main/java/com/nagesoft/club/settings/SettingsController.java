@@ -4,6 +4,7 @@ import com.nagesoft.club.account.AccountService;
 import com.nagesoft.club.account.CurrentUser;
 import com.nagesoft.club.domain.Account;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -21,6 +22,7 @@ import javax.validation.Valid;
 public class SettingsController {
 
     private final AccountService accountService;
+    private final ModelMapper modelMapper;
 
     @InitBinder("passwordForm")
     public void initBinder(WebDataBinder webDataBinder) {
@@ -31,7 +33,8 @@ public class SettingsController {
     public String profileUpdate(@CurrentUser Account account, Model model) {
 
 //        Account byNickname = accountRepository.findByNickname(account.getNickname());
-        model.addAttribute(new Profile(account));
+//        model.addAttribute(new Profile(account));
+        model.addAttribute(modelMapper.map(account, Profile.class));
         model.addAttribute(account);
 
         return "settings/profile";
@@ -77,7 +80,8 @@ public class SettingsController {
 
     @GetMapping("/settings/notifications")
     public String notiForm(@CurrentUser Account account, Model model) {
-        model.addAttribute(new NotificationForm(account));
+//        model.addAttribute(new NotificationForm(account));
+        model.addAttribute(modelMapper.map(account, NotificationForm.class));
         model.addAttribute(account);
         return "settings/notifications";
     }
