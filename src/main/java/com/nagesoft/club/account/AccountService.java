@@ -1,6 +1,7 @@
 package com.nagesoft.club.account;
 
 import com.nagesoft.club.domain.Account;
+import com.nagesoft.club.settings.NicknameForm;
 import com.nagesoft.club.settings.NotificationForm;
 import com.nagesoft.club.settings.Profile;
 import lombok.RequiredArgsConstructor;
@@ -119,5 +120,11 @@ public class AccountService implements UserDetailsService {
 //        account.setStudyUpdatedByWeb(notificationForm.isStudyUpdatedByWeb());
         accountRepository.save(account);
 
+    }
+
+    public void updateNickname(Account account, NicknameForm nicknameForm) {
+        modelMapper.map(nicknameForm, account);
+        accountRepository.save(account);
+        login(account);
     }
 }
