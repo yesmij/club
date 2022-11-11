@@ -127,4 +127,16 @@ public class AccountService implements UserDetailsService {
         accountRepository.save(account);
         login(account);
     }
+
+    public void emailLoginSend(String email) {
+
+        Account emailAccount = accountRepository.findByEmail(email);
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(email);
+        mailMessage.setSubject("LogIn By Email");
+        mailMessage.setText("/login-by-email?emailToken=" + emailAccount.getEmailCheckToken() +
+                "&email=" + email);
+        emailAccount.setEmailSendAt(LocalDateTime.now());
+        mailSender.send(mailMessage);
+    }
 }

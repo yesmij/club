@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .mvcMatchers("/", "/sign-up", "/login",
-                        "/check-email-token", "/resend-confirm-email" ,
+                        "/check-email-token", "/resend-confirm-email" ,"/email-login", "/login-by-email",
                         "/h2-console/**").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/profile/*").permitAll()
                 .anyRequest().authenticated();

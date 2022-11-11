@@ -5,12 +5,15 @@ import com.nagesoft.club.account.AccountService;
 import com.nagesoft.club.account.CurrentUser;
 import com.nagesoft.club.domain.Account;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @RequiredArgsConstructor
 @Controller
@@ -43,5 +46,40 @@ public class MainController {
         System.out.println("account = " + account);
 
         return "index";
+    }
+
+
+    @GetMapping("/email-login")
+    public String emailLoginForm() {
+        return "account/email-login";
+    }
+
+    @PostMapping("/email-login")
+    public String emailLoginSend(@RequestParam String email, RedirectAttributes attributes, Model model) {
+        if(Strings.isEmpty(email) || !accountRepository.existsByEmail(email)) {
+            model.addAttribute("error", "해당 사용자가 없스무니다!");
+            model.addAttribute("email");
+            return "account/email-login";
+        }
+        accountService.emailLoginSend(email);
+        attributes.addFlashAttribute("message", "메일 전송을 했습니다. 로그인해주세요.");
+        return "redirect:/email-login";
+    }
+
+    @GetMapping("/login-by-email")
+    public String emailLoginProcess(@RequestParam String emailToken, @RequestParam String email, Model model) {
+        if(email == null || emailToken == null) {
+            model.addAttribute("error", "email or token error");
+            return "account/logged-in-by-email";
+        }
+
+        Account accountByEmail = accountRepository.findByEmail(email);
+        if(accountByEmail == null || !emailToken.equals(accountByEmail.getEmailCheckToken()) ) {
+            model.addAttribute("error", "email or token error");
+            return "account/logged-in-by-email";
+        }
+
+        accountService.login(accountByEmail);
+        return "account/logged-in-by-email";
     }
 }
