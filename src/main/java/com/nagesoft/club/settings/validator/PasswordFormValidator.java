@@ -1,6 +1,6 @@
-package com.nagesoft.club.settings;
+package com.nagesoft.club.settings.validator;
 
-import org.springframework.stereotype.Component;
+import com.nagesoft.club.settings.form.PasswordForm;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 

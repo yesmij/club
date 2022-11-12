@@ -1,9 +1,9 @@
 package com.nagesoft.club.account;
 
 import com.nagesoft.club.domain.Account;
-import com.nagesoft.club.settings.NicknameForm;
-import com.nagesoft.club.settings.NotificationForm;
-import com.nagesoft.club.settings.Profile;
+import com.nagesoft.club.settings.form.NicknameForm;
+import com.nagesoft.club.settings.form.NotificationForm;
+import com.nagesoft.club.settings.form.Profile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;

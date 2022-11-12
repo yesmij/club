@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Builder
@@ -31,6 +32,9 @@ public class Account {
 
     @Lob @Basic(fetch = FetchType.EAGER)
     private String profileImage;
+
+    @ManyToMany
+    private Set<Tag> tagSet;
 
     private String bio;
     private String url;

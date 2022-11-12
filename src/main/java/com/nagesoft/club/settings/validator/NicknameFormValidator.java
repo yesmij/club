@@ -1,13 +1,11 @@
-package com.nagesoft.club.settings;
+package com.nagesoft.club.settings.validator;
 
 import com.nagesoft.club.account.AccountRepository;
+import com.nagesoft.club.settings.form.NicknameForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-
-import javax.validation.Valid;
-import javax.validation.Validation;
 
 @RequiredArgsConstructor
 @Component
