@@ -2,11 +2,9 @@ package com.nagesoft.club.settings;
 
 import com.nagesoft.club.account.AccountService;
 import com.nagesoft.club.account.CurrentUser;
+import com.nagesoft.club.account.TagRepository;
 import com.nagesoft.club.domain.Account;
-import com.nagesoft.club.settings.form.NicknameForm;
-import com.nagesoft.club.settings.form.NotificationForm;
-import com.nagesoft.club.settings.form.PasswordForm;
-import com.nagesoft.club.settings.form.Profile;
+import com.nagesoft.club.settings.form.*;
 import com.nagesoft.club.settings.validator.NicknameFormValidator;
 import com.nagesoft.club.settings.validator.PasswordFormValidator;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -30,6 +25,7 @@ public class SettingsController {
     private final AccountService accountService;
     private final ModelMapper modelMapper;
     private final NicknameFormValidator nicknameFormValidator;
+    private final TagRepository tagRepository;
 //    private final PasswordFormValidator passwordFormValidator;
 
     @InitBinder("passwordForm")
@@ -130,6 +126,17 @@ public class SettingsController {
         attributes.addFlashAttribute("message", "닉네임을 변경했습니다.");
         return "redirect:/settings/account";
     }
+
+    @GetMapping("/settings/tags")
+    public String tagForm(@CurrentUser Account account, Model model) {
+        model.addAttribute(account);
+        return "settings/tags";
+    }
+
+//    @PostMapping("/settings/tags/add")
+//    public @ResponseBody tagSave(@CurrentUser Account account, @RequestBody TagForm tagForm) {
+//        Tag tag = tagRepository.findByTag(tagForm.getTagTitle())
+//    }
 
 
 }
