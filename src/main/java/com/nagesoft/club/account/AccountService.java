@@ -1,9 +1,11 @@
 package com.nagesoft.club.account;
 
 import com.nagesoft.club.domain.Account;
+import com.nagesoft.club.domain.Tag;
 import com.nagesoft.club.settings.form.NicknameForm;
 import com.nagesoft.club.settings.form.NotificationForm;
 import com.nagesoft.club.settings.form.Profile;
+import com.nagesoft.club.settings.form.TagForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Transactional
@@ -34,6 +37,7 @@ public class AccountService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
+    private final TagRepository tagRepository;
 
     public Account accountCreationProcess(SignUpForm signUpForm) {
         Account newAccount = createAccount(signUpForm);
@@ -138,5 +142,11 @@ public class AccountService implements UserDetailsService {
                 "&email=" + email);
         emailAccount.setEmailSendAt(LocalDateTime.now());
         mailSender.send(mailMessage);
+    }
+
+    public void addTag(Account account, Tag tag) {
+        Account byId = accountRepository.getById(account.getId());
+        byId.getTagSet().add(tag);
+        accountRepository.save(byId);
     }
 }

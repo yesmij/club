@@ -4,11 +4,13 @@ import com.nagesoft.club.account.AccountService;
 import com.nagesoft.club.account.CurrentUser;
 import com.nagesoft.club.account.TagRepository;
 import com.nagesoft.club.domain.Account;
+import com.nagesoft.club.domain.Tag;
 import com.nagesoft.club.settings.form.*;
 import com.nagesoft.club.settings.validator.NicknameFormValidator;
 import com.nagesoft.club.settings.validator.PasswordFormValidator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -133,10 +135,15 @@ public class SettingsController {
         return "settings/tags";
     }
 
-//    @PostMapping("/settings/tags/add")
-//    public @ResponseBody tagSave(@CurrentUser Account account, @RequestBody TagForm tagForm) {
-//        Tag tag = tagRepository.findByTag(tagForm.getTagTitle())
-//    }
-
+    @ResponseBody
+    @PostMapping("/settings/tags/add")
+    public ResponseEntity tagSave(@CurrentUser Account account, @RequestBody TagForm tagForm) {
+        Tag tag = tagRepository.findByTitle(tagForm.getTagTitle());
+        if(tag == null) {
+            tag = tagRepository.save(Tag.builder().title(tagForm.getTagTitle()).build());
+        }
+        accountService.addTag(account, tag);
+        return ResponseEntity.ok().build();
+    }
 
 }

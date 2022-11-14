@@ -1,8 +1,10 @@
 package com.nagesoft.club.account;
 
-import ch.qos.logback.core.joran.action.IADataForComplexProperty;
 import com.nagesoft.club.domain.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
-public interface TagRepository extends JpaRepository<Long, Tag> {
+@Transactional(readOnly = true)
+public interface TagRepository extends JpaRepository<Tag, Long> {
+    Tag findByTitle(String tagTitle);
 }
