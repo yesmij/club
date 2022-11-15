@@ -149,4 +149,9 @@ public class AccountService implements UserDetailsService {
         byId.getTagSet().add(tag);
         accountRepository.save(byId);
     }
+
+    public void tagRemove(Account account, Tag tag) {
+        Account byId = accountRepository.getById(account.getId());
+        byId.getTagSet().remove(tag);
+    }
 }

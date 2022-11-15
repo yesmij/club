@@ -1,5 +1,6 @@
 package com.nagesoft.club.settings;
 
+import com.nagesoft.club.account.AccountRepository;
 import com.nagesoft.club.account.AccountService;
 import com.nagesoft.club.account.CurrentUser;
 import com.nagesoft.club.account.TagRepository;
@@ -19,6 +20,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Controller
@@ -28,6 +33,7 @@ public class SettingsController {
     private final ModelMapper modelMapper;
     private final NicknameFormValidator nicknameFormValidator;
     private final TagRepository tagRepository;
+    private final AccountRepository accountRepository;
 //    private final PasswordFormValidator passwordFormValidator;
 
     @InitBinder("passwordForm")
@@ -131,16 +137,33 @@ public class SettingsController {
 
     @GetMapping("/settings/tags")
     public String tagForm(@CurrentUser Account account, Model model) {
-        model.addAttribute(account);
+        Account byNickname = accountRepository.findByNickname(account.getNickname());
+        model.addAttribute("account", byNickname);
+        model.addAttribute("tags", byNickname.getTagSet().stream().map(Tag::getTitle).collect(Collectors.toList()));
+        System.out.println("tagList = " + byNickname.getTagSet().stream().map(Tag::getTitle).collect(Collectors.toList()));
+        System.out.println("byNickname = " + byNickname.getTagSet());
+        System.out.println("tag = " + tagRepository.findAll());
+//        tags = account.getTagSet().stream().collect(Collectors.toList());
+//        tagRepository.getById(account.getTagSet().stream().collect(Collectors.toList()))
         return "settings/tags";
+    }
+
+    @ResponseBody
+    @PostMapping("/settings/tags/remove")
+    public ResponseEntity tagRemove(@CurrentUser Account account, @RequestBody TagForm tagForm) {
+        Tag tag = tagRepository.findByTitle(tagForm.getTagTitle());
+        accountService.tagRemove(account, tag);
+        return ResponseEntity.ok().build();
     }
 
     @ResponseBody
     @PostMapping("/settings/tags/add")
     public ResponseEntity tagSave(@CurrentUser Account account, @RequestBody TagForm tagForm) {
         Tag tag = tagRepository.findByTitle(tagForm.getTagTitle());
+        System.out.println("tag1 = " + tag);
         if(tag == null) {
             tag = tagRepository.save(Tag.builder().title(tagForm.getTagTitle()).build());
+            System.out.println("tag2 = " + tag);
         }
         accountService.addTag(account, tag);
         return ResponseEntity.ok().build();
