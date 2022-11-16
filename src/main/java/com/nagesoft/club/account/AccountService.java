@@ -154,4 +154,13 @@ public class AccountService implements UserDetailsService {
         Account byId = accountRepository.getById(account.getId());
         byId.getTagSet().remove(tag);
     }
+
+    public Set<Tag> getTags(Account account) {
+        Account byId = accountRepository.getById(account.getId());
+        return byId.getTagSet();
+    }
+
+    public List<Tag> getWhitelistTags() {
+        return tagRepository.findAll();
+    }
 }

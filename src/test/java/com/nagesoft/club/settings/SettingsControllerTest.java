@@ -1,9 +1,13 @@
 package com.nagesoft.club.settings;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nagesoft.club.account.AccountRepository;
 import com.nagesoft.club.account.AccountService;
 import com.nagesoft.club.account.SignUpForm;
+import com.nagesoft.club.account.TagRepository;
 import com.nagesoft.club.domain.Account;
+import com.nagesoft.club.domain.Tag;
+import com.nagesoft.club.settings.form.TagForm;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -30,6 +35,8 @@ class SettingsControllerTest {
     @Autowired MockMvc mockMvc;
     @Autowired AccountService accountService;
     @Autowired AccountRepository accountRepository;
+    @Autowired ObjectMapper objectMapper;
+    @Autowired TagRepository tagRepository;
 
     @BeforeEach
     void before() {
@@ -165,5 +172,39 @@ class SettingsControllerTest {
                 .andExpect(model().hasErrors());
         //.andExpect(model().attributeExists());
     }
+
+    // 초기 값으로 태그 추가
+    @WithUserDetails(value = "santiago", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("태그 조회")
+    @Test
+    void tagForm() throws Exception {
+        mockMvc.perform(get("/settings/tags"))
+                .andExpect(model().attributeExists("whitelist"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("tags"))
+                .andExpect(view().name("settings/tags"));
+    }
+
+    // 태그 추가
+    @WithUserDetails(value = "santiago", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("태그 추가")
+    @Test
+    void tagAdd() throws Exception {
+        TagForm tagForm = new TagForm();
+        tagForm.setTagTitle("spring");
+        mockMvc.perform(post("/settings/tags/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(tagForm))
+                        .with(csrf()))
+//                .andExpect(model().attributeExists("whitelist"))
+                .andExpect(status().isOk());
+//                .andExpect(model().attributeExists("tags"))
+//                .andExpect(view().name("settings/tags"));
+        Tag spring = tagRepository.findByTitle("spring");
+        Assertions.assertThat(spring.equals("spring"));
+    }
+
+    // 태그 삭제
+
 
 }

@@ -1,5 +1,7 @@
 package com.nagesoft.club.settings;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nagesoft.club.account.AccountRepository;
 import com.nagesoft.club.account.AccountService;
 import com.nagesoft.club.account.CurrentUser;
@@ -23,6 +25,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -34,6 +37,7 @@ public class SettingsController {
     private final NicknameFormValidator nicknameFormValidator;
     private final TagRepository tagRepository;
     private final AccountRepository accountRepository;
+    private final ObjectMapper objectMapper;
 //    private final PasswordFormValidator passwordFormValidator;
 
     @InitBinder("passwordForm")
@@ -136,15 +140,13 @@ public class SettingsController {
     }
 
     @GetMapping("/settings/tags")
-    public String tagForm(@CurrentUser Account account, Model model) {
-        Account byNickname = accountRepository.findByNickname(account.getNickname());
-        model.addAttribute("account", byNickname);
-        model.addAttribute("tags", byNickname.getTagSet().stream().map(Tag::getTitle).collect(Collectors.toList()));
-        System.out.println("tagList = " + byNickname.getTagSet().stream().map(Tag::getTitle).collect(Collectors.toList()));
-        System.out.println("byNickname = " + byNickname.getTagSet());
-        System.out.println("tag = " + tagRepository.findAll());
-//        tags = account.getTagSet().stream().collect(Collectors.toList());
-//        tagRepository.getById(account.getTagSet().stream().collect(Collectors.toList()))
+    public String tagForm(@CurrentUser Account account, Model model) throws JsonProcessingException {
+        Set<Tag> tags = accountService.getTags(account);
+        List<Tag> whitelistTags = accountService.getWhitelistTags();
+
+        model.addAttribute("whitelist", objectMapper.writeValueAsString(whitelistTags));
+        model.addAttribute("account", account);
+        model.addAttribute("tags", tags.stream().map(Tag::getTitle).collect(Collectors.toList()));
         return "settings/tags";
     }
 
@@ -152,6 +154,9 @@ public class SettingsController {
     @PostMapping("/settings/tags/remove")
     public ResponseEntity tagRemove(@CurrentUser Account account, @RequestBody TagForm tagForm) {
         Tag tag = tagRepository.findByTitle(tagForm.getTagTitle());
+        if(tag == null) {
+            return ResponseEntity.badRequest().build();
+        }
         accountService.tagRemove(account, tag);
         return ResponseEntity.ok().build();
     }
