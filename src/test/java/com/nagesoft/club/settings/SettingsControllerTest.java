@@ -22,6 +22,8 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -205,6 +207,28 @@ class SettingsControllerTest {
     }
 
     // 태그 삭제
+    @WithUserDetails(value = "santiago", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("태그 삭제")
+    @Test
+    void tagRemove() throws Exception {
+        TagForm tagForm = new TagForm();
+        tagForm.setTagTitle("spring");
+        Tag savedTag = tagRepository.save(Tag.builder().title(tagForm.getTagTitle()).build());
+        accountService.addTag(accountRepository.findByNickname("santiago"), savedTag);
 
+        mockMvc.perform(post("/settings/tags/remove")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(tagForm))
+                        .with(csrf()))
+//                .andExpect(model().attributeExists("whitelist"))
+                .andExpect(status().isOk());
+//                .andExpect(model().attributeExists("tags"))
+//                .andExpect(view().name("settings/tags"));
+        Tag spring = tagRepository.findByTitle("spring");
+        Account santiago = accountRepository.findByNickname("santiago");
+        Set<Tag> tagSet = santiago.getTagSet();
+
+//        assertNull(tagSet);
+    }
 
 }
