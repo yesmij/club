@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -35,6 +36,9 @@ public class Account {
 
     @ManyToMany
     private Set<Tag> tagSet;
+
+    @ManyToMany
+    private Set<Zone> zones = new HashSet<>();
 
     private String bio;
     private String url;
