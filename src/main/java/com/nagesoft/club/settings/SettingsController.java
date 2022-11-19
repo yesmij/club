@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nagesoft.club.account.AccountRepository;
 import com.nagesoft.club.account.AccountService;
-import com.nagesoft.club.account.CurrentUser;
+import com.nagesoft.club.account.CurrentAccount;
 import com.nagesoft.club.account.TagRepository;
 import com.nagesoft.club.domain.Account;
 import com.nagesoft.club.domain.Tag;
@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -51,7 +49,7 @@ public class SettingsController {
     }
 
     @GetMapping("/settings/profile")
-    public String profileUpdate(@CurrentUser Account account, Model model) {
+    public String profileUpdate(@CurrentAccount Account account, Model model) {
 
 //        Account byNickname = accountRepository.findByNickname(account.getNickname());
 //        model.addAttribute(new Profile(account));
@@ -62,7 +60,7 @@ public class SettingsController {
     }
 
     @PostMapping("/settings/profile")
-    public String profileUpdateSave(@CurrentUser Account account, @Valid @ModelAttribute Profile profile, Errors errors, Model model, RedirectAttributes redirectAttributes) {
+    public String profileUpdateSave(@CurrentAccount Account account, @Valid @ModelAttribute Profile profile, Errors errors, Model model, RedirectAttributes redirectAttributes) {
 
         if(errors.hasErrors()) {
             model.addAttribute(profile);
@@ -80,14 +78,14 @@ public class SettingsController {
     }
 
     @GetMapping("/settings/password")
-    public String passwordForm(@CurrentUser Account account, Model model) {
+    public String passwordForm(@CurrentAccount Account account, Model model) {
         model.addAttribute(account);
         model.addAttribute("passwordForm", new PasswordForm());
         return "settings/password";
     }
 
     @PostMapping("/settings/password")
-    public String passwordUpdate(@CurrentUser Account account, @ModelAttribute @Valid PasswordForm passwordForm
+    public String passwordUpdate(@CurrentAccount Account account, @ModelAttribute @Valid PasswordForm passwordForm
                 , Errors errors, RedirectAttributes attributes, Model model) {
         if(errors.hasErrors()){
             model.addAttribute("account");
@@ -100,7 +98,7 @@ public class SettingsController {
     }
 
     @GetMapping("/settings/notifications")
-    public String notiForm(@CurrentUser Account account, Model model) {
+    public String notiForm(@CurrentAccount Account account, Model model) {
 //        model.addAttribute(new NotificationForm(account));
         model.addAttribute(modelMapper.map(account, NotificationForm.class));
         model.addAttribute(account);
@@ -108,7 +106,7 @@ public class SettingsController {
     }
 
     @PostMapping("/settings/notifications")
-    public String notiSave(@CurrentUser Account account, Model model, @Valid NotificationForm notificationForm, RedirectAttributes attribute, Errors errors) {
+    public String notiSave(@CurrentAccount Account account, Model model, @Valid NotificationForm notificationForm, RedirectAttributes attribute, Errors errors) {
         if(errors.hasErrors()) {
             model.addAttribute(account);
             return "settings/notifications";
@@ -122,14 +120,14 @@ public class SettingsController {
     }
 
     @GetMapping("/settings/account")
-    public String accountForm(@CurrentUser Account account, Model model) {
+    public String accountForm(@CurrentAccount Account account, Model model) {
         model.addAttribute(account);
         model.addAttribute(modelMapper.map(account, NicknameForm.class));
         return "settings/account";
     }
 
     @PostMapping("/settings/account")
-    public String accountSave(@CurrentUser Account account, @Valid NicknameForm nicknameForm, Errors errors, RedirectAttributes attributes, Model model) {
+    public String accountSave(@CurrentAccount Account account, @Valid NicknameForm nicknameForm, Errors errors, RedirectAttributes attributes, Model model) {
         if(errors.hasErrors()) {
             model.addAttribute("error", "닉네임 정보를 제대로 입력해주세요");
             return "settings/account";
@@ -140,7 +138,7 @@ public class SettingsController {
     }
 
     @GetMapping("/settings/tags")
-    public String tagForm(@CurrentUser Account account, Model model) throws JsonProcessingException {
+    public String tagForm(@CurrentAccount Account account, Model model) throws JsonProcessingException {
         Set<Tag> tags = accountService.getTags(account);
         List<Tag> whitelistTags = accountService.getWhitelistTags();
 
@@ -152,7 +150,7 @@ public class SettingsController {
 
     @ResponseBody
     @PostMapping("/settings/tags/remove")
-    public ResponseEntity tagRemove(@CurrentUser Account account, @RequestBody TagForm tagForm) {
+    public ResponseEntity tagRemove(@CurrentAccount Account account, @RequestBody TagForm tagForm) {
         Tag tag = tagRepository.findByTitle(tagForm.getTagTitle());
         if(tag == null) {
             return ResponseEntity.badRequest().build();
@@ -163,7 +161,7 @@ public class SettingsController {
 
     @ResponseBody
     @PostMapping("/settings/tags/add")
-    public ResponseEntity tagSave(@CurrentUser Account account, @RequestBody TagForm tagForm) {
+    public ResponseEntity tagSave(@CurrentAccount Account account, @RequestBody TagForm tagForm) {
         Tag tag = tagRepository.findByTitle(tagForm.getTagTitle());
         System.out.println("tag1 = " + tag);
         if(tag == null) {
@@ -174,4 +172,23 @@ public class SettingsController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/settings/zones")
+    public String updateZonesForm(@CurrentAccount Account account, Model model) throws JsonProcessingException {
+        return "settings/zone";
+    }
+
+    @PostMapping("/settings/zones" + "/add")
+    @ResponseBody
+//    public ResponseEntity addZone(@CurrentAccount Account account, @RequestBody ZoneForm zoneForm) {
+    public ResponseEntity addZone(@CurrentAccount Account account) {
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/settings/zones" + "/remove")
+    @ResponseBody
+//    public ResponseEntity removeZone(@CurrentAccount Account account, @RequestBody ZoneForm zoneForm) {
+    public ResponseEntity removeZone(@CurrentAccount Account account) {
+
+            return ResponseEntity.ok().build();
+    }
 }

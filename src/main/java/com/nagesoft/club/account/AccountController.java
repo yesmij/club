@@ -9,7 +9,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -86,7 +85,7 @@ public class AccountController {
     }
 
     @RequestMapping("/check-email")
-    public String checkEmail(@CurrentUser Account account, Model model) {
+    public String checkEmail(@CurrentAccount Account account, Model model) {
         if(account != null) {
             model.addAttribute(account);
         }
@@ -96,7 +95,7 @@ public class AccountController {
 
 
     @GetMapping("/resend-confirm-email")
-    public String resend(@CurrentUser Account account, Model model) {
+    public String resend(@CurrentAccount Account account, Model model) {
         if(account == null ) {
             model.addAttribute("error", "token or email error");
             return "account/checked-email-token";
@@ -119,7 +118,7 @@ public class AccountController {
     }
 
     @GetMapping("/profile/{nickname}")
-    public String profileView(@PathVariable String nickname, @CurrentUser Account account, Model model) {
+    public String profileView(@PathVariable String nickname, @CurrentAccount Account account, Model model) {
 
         // nickname 사용자 확인 -> not IllegalArgumentException
         Account byNickname = accountRepository.findByNickname(nickname);
