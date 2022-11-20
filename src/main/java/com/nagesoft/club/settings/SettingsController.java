@@ -2,12 +2,10 @@ package com.nagesoft.club.settings;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nagesoft.club.account.AccountRepository;
-import com.nagesoft.club.account.AccountService;
-import com.nagesoft.club.account.CurrentAccount;
-import com.nagesoft.club.account.TagRepository;
+import com.nagesoft.club.account.*;
 import com.nagesoft.club.domain.Account;
 import com.nagesoft.club.domain.Tag;
+import com.nagesoft.club.domain.Zone;
 import com.nagesoft.club.settings.form.*;
 import com.nagesoft.club.settings.validator.NicknameFormValidator;
 import com.nagesoft.club.settings.validator.PasswordFormValidator;
@@ -36,6 +34,7 @@ public class SettingsController {
     private final TagRepository tagRepository;
     private final AccountRepository accountRepository;
     private final ObjectMapper objectMapper;
+    private final ZoneRepository zoneRepository;
 //    private final PasswordFormValidator passwordFormValidator;
 
     @InitBinder("passwordForm")
@@ -174,7 +173,11 @@ public class SettingsController {
 
     @GetMapping("/settings/zones")
     public String updateZonesForm(@CurrentAccount Account account, Model model) throws JsonProcessingException {
-        return "settings/zone";
+        model.addAttribute(account);
+        model.addAttribute("whitelist", objectMapper.writeValueAsString(zoneRepository.findAll()));
+        model.addAttribute("zones", objectMapper.writeValueAsString(
+                    accountRepository.getById(account.getId()).getZones().stream().map(Zone::getCity).collect(Collectors.toList())));
+        return "settings/zones";
     }
 
     @PostMapping("/settings/zones" + "/add")
