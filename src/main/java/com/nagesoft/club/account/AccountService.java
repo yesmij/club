@@ -2,6 +2,7 @@ package com.nagesoft.club.account;
 
 import com.nagesoft.club.domain.Account;
 import com.nagesoft.club.domain.Tag;
+import com.nagesoft.club.domain.Zone;
 import com.nagesoft.club.settings.form.NicknameForm;
 import com.nagesoft.club.settings.form.NotificationForm;
 import com.nagesoft.club.settings.form.Profile;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -162,5 +164,22 @@ public class AccountService implements UserDetailsService {
 
     public List<Tag> getWhitelistTags() {
         return tagRepository.findAll();
+    }
+
+    public Set<Zone> getZones(Account account) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        return byId.orElseThrow().getZones();
+    }
+
+    public void addZone(Account account, Zone zone) {
+        Account byId = accountRepository.getById(account.getId());
+        byId.getZones().add(zone);
+        accountRepository.save(byId);
+    }
+
+    public void removeZone(Account account, Zone zone) {
+        Account byId = accountRepository.getById(account.getId());
+        byId.getZones().remove(zone);
+        accountRepository.save(byId);
     }
 }
