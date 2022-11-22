@@ -6,7 +6,7 @@ import com.nagesoft.club.domain.Zone;
 import com.nagesoft.club.settings.form.NicknameForm;
 import com.nagesoft.club.settings.form.NotificationForm;
 import com.nagesoft.club.settings.form.Profile;
-import com.nagesoft.club.settings.form.TagForm;
+import com.nagesoft.club.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;

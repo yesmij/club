@@ -9,6 +9,8 @@ import com.nagesoft.club.domain.Zone;
 import com.nagesoft.club.settings.form.*;
 import com.nagesoft.club.settings.validator.NicknameFormValidator;
 import com.nagesoft.club.settings.validator.PasswordFormValidator;
+import com.nagesoft.club.tag.TagRepository;
+import com.nagesoft.club.zone.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;

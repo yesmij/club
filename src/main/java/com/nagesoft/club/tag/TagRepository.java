@@ -1,4 +1,4 @@
-package com.nagesoft.club.account;
+package com.nagesoft.club.tag;
 
 import com.nagesoft.club.domain.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nagesoft.club.account.AccountRepository;
 import com.nagesoft.club.account.AccountService;
 import com.nagesoft.club.account.SignUpForm;
-import com.nagesoft.club.account.TagRepository;
+import com.nagesoft.club.tag.TagRepository;
 import com.nagesoft.club.domain.Account;
 import com.nagesoft.club.domain.Tag;
 import com.nagesoft.club.settings.form.TagForm;
@@ -17,10 +17,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.TestExecutionEvent;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.Set;
 
