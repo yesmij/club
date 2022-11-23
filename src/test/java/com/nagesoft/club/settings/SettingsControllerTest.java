@@ -229,4 +229,16 @@ class SettingsControllerTest {
 //        assertNull(tagSet);
     }
 
+    // 초기 값으로 태그 추가
+    @WithUserDetails(value = "santiago", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("zones 조회")
+    @Test
+    void zoneForm() throws Exception {
+        mockMvc.perform(get("/settings/zones"))
+                .andExpect(model().attributeExists("whitelist"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("zones"));
+//                .andExpect(view().name("settings/zones"));
+    }
+
 }
