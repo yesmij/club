@@ -52,6 +52,11 @@ public class MainController {
         return "account/email-login";
     }
 
+    @GetMapping("/nologin")
+    public String noLogin() {
+        return "nologin";
+    }
+
     @PostMapping("/email-login")
     public String emailLoginSend(@RequestParam String email, RedirectAttributes attributes, Model model) {
         if(Strings.isEmpty(email) || !accountRepository.existsByEmail(email)) {

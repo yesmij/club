@@ -237,8 +237,8 @@ class SettingsControllerTest {
         mockMvc.perform(get("/settings/zones"))
                 .andExpect(model().attributeExists("whitelist"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("zones"));
-//                .andExpect(view().name("settings/zones"));
+                .andExpect(model().attributeExists("zones"))
+                .andExpect(view().name("settings/zones"));
     }
 
 }
