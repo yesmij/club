@@ -147,19 +147,22 @@ public class AccountService implements UserDetailsService {
     }
 
     public void addTag(Account account, Tag tag) {
-        Account byId = accountRepository.getById(account.getId());
-        byId.getTagSet().add(tag);
-        accountRepository.save(byId);
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a -> a.getTagSet().add(tag));
+//        byId.getTagSet().add(tag);
+//        accountRepository.save(byId);
     }
 
     public void tagRemove(Account account, Tag tag) {
-        Account byId = accountRepository.getById(account.getId());
-        byId.getTagSet().remove(tag);
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a -> a.getTagSet().remove(tag));
+//        byId.getTagSet().remove(tag);
     }
 
     public Set<Tag> getTags(Account account) {
-        Account byId = accountRepository.getById(account.getId());
-        return byId.getTagSet();
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        return byId.orElseThrow().getTagSet();
+//        return byId.getTagSet();
     }
 
     public List<Tag> getWhitelistTags() {
@@ -172,14 +175,14 @@ public class AccountService implements UserDetailsService {
     }
 
     public void addZone(Account account, Zone zone) {
-        Account byId = accountRepository.getById(account.getId());
-        byId.getZones().add(zone);
-        accountRepository.save(byId);
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a -> a.getZones().add(zone));
     }
 
     public void removeZone(Account account, Zone zone) {
-        Account byId = accountRepository.getById(account.getId());
-        byId.getZones().remove(zone);
-        accountRepository.save(byId);
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a -> a.getZones().remove(zone));
+//        byId.getZones().remove(zone);
+//        accountRepository.save(byId);
     }
 }
