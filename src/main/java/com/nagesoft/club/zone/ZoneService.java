@@ -24,8 +24,8 @@ import java.util.stream.Collectors;
 public class ZoneService {
     private final ZoneRepository zoneRepository;
 
-//    @PostConstruct
-public void initZoneData() throws IOException {
+    @PostConstruct
+    public void initZoneData() throws IOException {
 
         if (zoneRepository.count() == 0) {
             Resource resource = new ClassPathResource("zones_kr.csv");
