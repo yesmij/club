@@ -3,6 +3,8 @@ package com.nagesoft.club.account;
 import com.nagesoft.club.domain.Account;
 import com.nagesoft.club.domain.Tag;
 import com.nagesoft.club.domain.Zone;
+import com.nagesoft.club.mail.EmailMessage;
+import com.nagesoft.club.mail.EmailService;
 import com.nagesoft.club.settings.form.NicknameForm;
 import com.nagesoft.club.settings.form.NotificationForm;
 import com.nagesoft.club.settings.form.Profile;
@@ -35,7 +37,8 @@ import java.util.Set;
 public class AccountService implements UserDetailsService {
 
     private final AccountRepository accountRepository;
-    private final JavaMailSender mailSender;
+    //private final JavaMailSender mailSender;
+    private final EmailService emailService;
 
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
@@ -64,13 +67,23 @@ public class AccountService implements UserDetailsService {
     }
 
     public void accountConfirmMail(Account newAccount) {
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(newAccount.getEmail());
-        mailMessage.setSubject("会員　登録　メール　確認");
-        mailMessage.setText("/check-email-token?emailToken=" + newAccount.getEmailCheckToken() +
-                "&email=" + newAccount.getEmail());
-        newAccount.setEmailSendAt(LocalDateTime.now());
-        mailSender.send(mailMessage);
+
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(newAccount.getEmail())
+                .subject("스터디올래, 회원 가입 인증")
+                .message("/check-email-token?token=" + newAccount.getEmailCheckToken() +
+                        "&email=" + newAccount.getEmail())
+                .build();
+
+
+//        SimpleMailMessage mailMessage = new SimpleMailMessage();
+//        mailMessage.setTo(newAccount.getEmail());
+//        mailMessage.setSubject("会員　登録　メール　確認");
+//        mailMessage.setText("/check-email-token?emailToken=" + newAccount.getEmailCheckToken() +
+//                "&email=" + newAccount.getEmail());
+//        newAccount.setEmailSendAt(LocalDateTime.now());
+        //mailSender.send(mailMessage);
+        emailService.sendEmail(emailMessage);
     }
 
     public void login(Account account) {
@@ -136,14 +149,24 @@ public class AccountService implements UserDetailsService {
 
     public void emailLoginSend(String email) {
 
-        Account emailAccount = accountRepository.findByEmail(email);
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(email);
-        mailMessage.setSubject("LogIn By Email");
-        mailMessage.setText("/login-by-email?emailToken=" + emailAccount.getEmailCheckToken() +
-                "&email=" + email);
-        emailAccount.setEmailSendAt(LocalDateTime.now());
-        mailSender.send(mailMessage);
+        Account byEmail = accountRepository.findByEmail(email);
+
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(byEmail.getEmail())
+                .subject("스터디올래, 회원 가입 인증")
+                .message("/check-email-token?token=" + byEmail.getEmailCheckToken() +
+                        "&email=" + byEmail.getEmail())
+                .build();
+
+//        Account emailAccount = accountRepository.findByEmail(email);
+//        SimpleMailMessage mailMessage = new SimpleMailMessage();
+//        mailMessage.setTo(email);
+//        mailMessage.setSubject("LogIn By Email");
+//        mailMessage.setText("/login-by-email?emailToken=" + emailAccount.getEmailCheckToken() +
+//                "&email=" + email);
+//        emailAccount.setEmailSendAt(LocalDateTime.now());
+        //mailSender.send(mailMessage);
+        emailService.sendEmail(emailMessage);
     }
 
     public void addTag(Account account, Tag tag) {
