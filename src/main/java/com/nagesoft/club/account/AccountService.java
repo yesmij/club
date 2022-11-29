@@ -1,5 +1,6 @@
 package com.nagesoft.club.account;
 
+import com.nagesoft.club.config.AppProperties;
 import com.nagesoft.club.domain.Account;
 import com.nagesoft.club.domain.Tag;
 import com.nagesoft.club.domain.Zone;
@@ -24,6 +25,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,6 +46,8 @@ public class AccountService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
     private final TagRepository tagRepository;
+    private final TemplateEngine templateEngine;
+    private final AppProperties appProperties;
 
     public Account accountCreationProcess(SignUpForm signUpForm) {
         Account newAccount = createAccount(signUpForm);
@@ -68,13 +73,21 @@ public class AccountService implements UserDetailsService {
 
     public void accountConfirmMail(Account newAccount) {
 
+        Context context = new Context();
+        context.setVariable("link", "/check-email-token?token=" + newAccount.getEmailCheckToken() +
+                "&email=" + newAccount.getEmail());
+        context.setVariable("nickname", newAccount.getNickname());
+        context.setVariable("linkName", "이메일 인증하기");
+        context.setVariable("message", "스터디올래 서비스를 사용하려면 링크를 클릭하세요.");
+        context.setVariable("host", appProperties.getHost());
+
+        String message = templateEngine.process("mail/simple-link", context);
+
         EmailMessage emailMessage = EmailMessage.builder()
                 .to(newAccount.getEmail())
                 .subject("스터디올래, 회원 가입 인증")
-                .message("/check-email-token?token=" + newAccount.getEmailCheckToken() +
-                        "&email=" + newAccount.getEmail())
+                .message(message)
                 .build();
-
 
 //        SimpleMailMessage mailMessage = new SimpleMailMessage();
 //        mailMessage.setTo(newAccount.getEmail());
@@ -151,11 +164,21 @@ public class AccountService implements UserDetailsService {
 
         Account byEmail = accountRepository.findByEmail(email);
 
+        Context context = new Context();
+        context.setVariable("link", "/check-email-token?token=" + byEmail.getEmailCheckToken() +
+                "&email=" + byEmail.getEmail());
+        context.setVariable("nickname", byEmail.getNickname());
+        context.setVariable("linkName", "이메일 인증하기");
+        context.setVariable("message", "스터디올래 서비스를 사용하려면 링크를 클릭하세요.");
+        context.setVariable("host", appProperties.getHost());
+
+        String message = templateEngine.process("mail/simple-link", context);
+
+
         EmailMessage emailMessage = EmailMessage.builder()
                 .to(byEmail.getEmail())
                 .subject("스터디올래, 회원 가입 인증")
-                .message("/check-email-token?token=" + byEmail.getEmailCheckToken() +
-                        "&email=" + byEmail.getEmail())
+                .message(message)
                 .build();
 
 //        Account emailAccount = accountRepository.findByEmail(email);
