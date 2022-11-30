@@ -74,7 +74,7 @@ public class AccountService implements UserDetailsService {
     public void accountConfirmMail(Account newAccount) {
 
         Context context = new Context();
-        context.setVariable("link", "/check-email-token?token=" + newAccount.getEmailCheckToken() +
+        context.setVariable("link", "/check-email-token?emailToken=" + newAccount.getEmailCheckToken() +
                 "&email=" + newAccount.getEmail());
         context.setVariable("nickname", newAccount.getNickname());
         context.setVariable("linkName", "이메일 인증하기");
@@ -165,7 +165,7 @@ public class AccountService implements UserDetailsService {
         Account byEmail = accountRepository.findByEmail(email);
 
         Context context = new Context();
-        context.setVariable("link", "/check-email-token?token=" + byEmail.getEmailCheckToken() +
+        context.setVariable("link", "/check-email-token?emailToken=" + byEmail.getEmailCheckToken() +
                 "&email=" + byEmail.getEmail());
         context.setVariable("nickname", byEmail.getNickname());
         context.setVariable("linkName", "이메일 인증하기");

@@ -1,6 +1,8 @@
 package com.nagesoft.club.account;
 
 import com.nagesoft.club.domain.Account;
+import com.nagesoft.club.mail.EmailMessage;
+import com.nagesoft.club.mail.EmailService;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -37,7 +39,7 @@ class AccountControllerTest {
     @Autowired private AccountRepository accountRepository;
     @Autowired private AccountService accountService ;
 
-    @MockBean JavaMailSender javaMailSender;
+    @MockBean EmailService emailService;
 
     @DisplayName("회원가입 - View")
     @Test
@@ -76,7 +78,8 @@ class AccountControllerTest {
                 .andExpect(authenticated().withUsername("santiago"));
 
         Assertions.assertThat(accountRepository.existsByEmail(email)).isTrue();
-        then(javaMailSender).should().send(any(SimpleMailMessage.class));
+//        then(emailService).should().send(any(SimpleMailMessage.class));
+        then(emailService).should().sendEmail(any(EmailMessage.class));
         
         //password encoding
         Account account = accountRepository.findByEmail(email);
