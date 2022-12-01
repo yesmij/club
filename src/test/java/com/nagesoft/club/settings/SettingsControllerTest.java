@@ -76,7 +76,7 @@ class SettingsControllerTest {
 
         Account account = accountRepository.findByNickname("santiago");
         mockMvc.perform(post("/settings/profile")
-                        .param("bio", "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM")
+                        .param("bio", "MMMMMMMMMMM")
                         .param("occupation", "sw")
                         .param("location", "hanam")
                         .param("url", "https://www")
