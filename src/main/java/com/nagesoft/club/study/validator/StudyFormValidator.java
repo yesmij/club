@@ -1,5 +1,7 @@
-package com.nagesoft.club.study;
+package com.nagesoft.club.study.validator;
 
+import com.nagesoft.club.study.StudyRepository;
+import com.nagesoft.club.study.form.StudyForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

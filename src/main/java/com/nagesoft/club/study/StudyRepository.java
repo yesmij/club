@@ -7,4 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface StudyRepository extends JpaRepository<Study, Long> {
     Boolean existsByPath(String path);
+
+    Study findByPath(String path);
 }

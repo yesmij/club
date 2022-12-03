@@ -1,4 +1,4 @@
-package com.nagesoft.club.study;
+package com.nagesoft.club.study.form;
 
 import com.nagesoft.club.domain.Tag;
 import com.nagesoft.club.domain.Zone;
