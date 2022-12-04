@@ -1,5 +1,6 @@
 package com.nagesoft.club.domain;
 
+import com.nagesoft.club.account.UserAccount;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,11 +16,11 @@ public class Study {
     @GeneratedValue
     private Long id;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Account> managers = new HashSet<>();
 
     @ManyToMany
-    private Set<Account> members;
+    private Set<Account> members = new HashSet<>();
 
     @Column(unique = true)
     private String path;
@@ -54,4 +55,22 @@ public class Study {
 
     private boolean useBanner;
 
+    public boolean isJoinable(UserAccount userAccount) {
+        Account account = userAccount.getAccount();
+        return this.recruiting == true && this.published == true
+                && !this.members.contains(account) && !this.managers.contains(account);
+    }
+
+    public boolean isMember(UserAccount userAccount) {
+        return this.members.contains(userAccount.getAccount());
+    }
+
+    public boolean isManager(UserAccount userAccount) {
+        return this.managers.contains(userAccount.getAccount());
+        //return true;
+    }
+
+    public void addManager(Account account) {
+        this.managers.add(account);
+    }
 }

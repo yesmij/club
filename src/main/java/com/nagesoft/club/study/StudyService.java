@@ -19,7 +19,8 @@ public class StudyService {
     public Study cretateStudy(Study study, Account account) {
         Study savedStudy = studyRepository.save(study);
 //        Account accountGetOne =  accountRepository.getOne(account.getId());
-        savedStudy.getManagers().add(account);  // todo Account로 변경!!
+        //savedStudy.getManagers().add(account);  // todo Account로 변경!!
+        savedStudy.addManager(account);
         return savedStudy;
     }
 }
