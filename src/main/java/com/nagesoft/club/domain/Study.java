@@ -8,6 +8,11 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+@NamedEntityGraph(name = "study.withAll", attributeNodes = {
+            @NamedAttributeNode("managers"),
+            @NamedAttributeNode("members"),
+            @NamedAttributeNode("zones"),
+            @NamedAttributeNode("tags")} )
 @Getter @Setter @EqualsAndHashCode(of = "id")
 @Entity
 @Builder @NoArgsConstructor @AllArgsConstructor
