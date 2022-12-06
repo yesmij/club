@@ -18,8 +18,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
+import java.lang.reflect.Member;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Controller
@@ -43,8 +46,9 @@ public class StudyController {
     }
 
     @PostMapping("/new-study")
-    public String newStudySave(@CurrentAccount Account account, @Valid StudyForm studyForm, Errors errors) {
+    public String newStudySave(@CurrentAccount Account account, @Valid StudyForm studyForm, Errors errors, Model model) {
         if(errors.hasErrors()) {
+            model.addAttribute(account);
             return "study/new-study";
         }
 
@@ -55,8 +59,18 @@ public class StudyController {
     @GetMapping("/study/{path}")
     public String studyView(@CurrentAccount Account account, @PathVariable String path, Model model) {
         model.addAttribute("study", studyRepository.findByPath(path));
+        model.addAttribute(account);
         return "study/view";
     }
 
+    @GetMapping("/study/{path}/members")
+    public String members(@CurrentAccount Account account, @PathVariable String path, Model model) {
+        Study study = studyRepository.findByPath(path);
+        model.addAttribute("study", study);
+        model.addAttribute("members", study.getMembers());
+        model.addAttribute(account);
+//        System.out.println("memberSet = " + memberSet.stream().map(Member::getName).collect(Collectors.toList()) );
+        return "study/members";
+    }
 
 }
