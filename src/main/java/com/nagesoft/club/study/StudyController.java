@@ -1,7 +1,6 @@
 package com.nagesoft.club.study;
 
 import com.nagesoft.club.account.CurrentAccount;
-import com.nagesoft.club.config.AppProperties;
 import com.nagesoft.club.domain.Account;
 import com.nagesoft.club.domain.Study;
 import com.nagesoft.club.study.form.StudyForm;
@@ -18,11 +17,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
-import java.lang.reflect.Member;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Controller
@@ -52,7 +48,7 @@ public class StudyController {
             return "study/new-study";
         }
 
-        Study study = studyService.cretateStudy(modelMapper.map(studyForm, Study.class), account);
+        Study study = studyService.createStudy(modelMapper.map(studyForm, Study.class), account);
         return "redirect:/study/" + URLEncoder.encode(study.getPath(), StandardCharsets.UTF_8);
     }
 
