@@ -72,38 +72,4 @@ public class StudyController {
         return "study/members";
     }
 
-    @GetMapping("/study/{path}/settings/description")
-    public String settingForm(@CurrentAccount Account account, @PathVariable String path, Model model) {
-        Study study = studyRepository.findByPath(path);
-        if(!study.getManagers().contains(account)) {
-            model.addAttribute("message", "매니저만 접근 가능합니다.");
-            model.addAttribute(account);
-            model.addAttribute(study);
-            //return "study/settings/description";
-            throw new AccessDeniedException("사용 권한이 없습니다."); // todo 서비스에 체크 기능 두고, 권한여부는 Account에 둔다!!
-        }
-
-        model.addAttribute(account);
-        model.addAttribute(study);
-        model.addAttribute(new StudyDescriptionForm().builder().shortDescription(study.getShortDescription())
-                .fullDescription(study.getFullDescription()).build());
-        //model.addAttribute(modelMapper.map(study, StudyDescriptionForm.class));
-        return "study/settings/description";
-    }
-
-    @PostMapping("/study/{path}/settings/description")
-    public String settingDescription(@CurrentAccount Account account, @PathVariable String path, @Valid StudyDescriptionForm studyDescriptionForm,
-                                     Errors errors, Model model, RedirectAttributes attributes) {
-        if(errors.hasErrors()) {
-            model.addAttribute(account);
-            return "study/settings/description";
-        }
-        //Study study = studyService.updateDescription(modelMapper.map(studyDescriptionForm, Study.class));
-        studyService.updateDescription(path, studyDescriptionForm);
-        attributes.addFlashAttribute("message", "수정했습니다.");
-        //System.out.println("Controller : study.Desc = " + study.getFullDescription());
-        model.addAttribute(account);
-        return "redirect:/study/" + URLEncoder.encode(path, StandardCharsets.UTF_8) + "/settings/description";
-    }
-
 }

@@ -63,6 +63,10 @@ public class Account {
         this.joinedAt = LocalDateTime.now();
     }
 
+    public boolean isManagerOf(Study study) {
+        return study.getManagers().contains(this);
+    }
+
 //    public void passwordEncode(String rawPassword) {
 //        this.password = passwordEncoder.encode(rawPassword);
 //    }
