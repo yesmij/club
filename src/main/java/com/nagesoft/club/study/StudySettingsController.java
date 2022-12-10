@@ -13,6 +13,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -54,6 +55,41 @@ public class StudySettingsController {
         attributes.addFlashAttribute("message", "수정했습니다.");
         //System.out.println("Controller : study.Desc = " + study.getFullDescription());
         model.addAttribute(account);
-        return "redirect:/study/" + URLEncoder.encode(path, StandardCharsets.UTF_8) + "/settings/description";
+        return "redirect:/study/" + study.getEncodePath() + "/settings/description";
+    }
+
+    @GetMapping("/study/{path}/settings/banner")
+    public String settingBanner(@CurrentAccount Account account, @PathVariable String path, Model model) {
+        Study study = studyService.getStudyToUpdate(path, account);
+        model.addAttribute(study);
+        model.addAttribute(account);
+        return "study/settings/banner";
+    }
+
+    @PostMapping("/study/{path}/settings/banner")
+    public String settingBannerSave(@CurrentAccount Account account, @PathVariable String path,
+                                    RedirectAttributes attributes, @RequestParam String image) {
+        Study study = studyService.getStudyToUpdate(path, account);
+        studyService.updateBanner(study, image);
+        attributes.addFlashAttribute("message", "배너는 수정했습니다.");
+        return "redirect:/study/" + study.getEncodePath() + "/settings/banner";
+    }
+
+    @PostMapping("/study/{path}/settings/banner/enable")
+    public String settingEnableBanner(@CurrentAccount Account account, @PathVariable String path,
+                                      RedirectAttributes attributes) {
+        Study study = studyService.getStudyToUpdate(path, account);
+        studyService.updateEnable(study, true);
+        attributes.addFlashAttribute("message", "배너를 활성화했습니다.");
+        return "redirect:/study/" + study.getEncodePath() + "/settings/banner";
+    }
+
+    @PostMapping("/study/{path}/settings/banner/disable")
+    public String settingDisableBanner(@CurrentAccount Account account, @PathVariable String path,
+                                      RedirectAttributes attributes) {
+        Study study = studyService.getStudyToUpdate(path, account);
+        studyService.updateEnable(study, false);
+        attributes.addFlashAttribute("message", "배너를 비활성화했습니다.");
+        return "redirect:/study/" + study.getEncodePath() + "/settings/banner";
     }
 }

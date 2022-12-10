@@ -52,5 +52,11 @@ public class StudyService {
         return study;
     }
 
+    public void updateBanner(Study study, String image) {
+        study.setImage(image);
+    }
 
+    public void updateEnable(Study study, boolean enableFlag) {
+        study.setUseBanner(enableFlag);
+    }
 }

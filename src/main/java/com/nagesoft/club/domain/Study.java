@@ -84,4 +84,9 @@ public class Study {
     public String getEncodePath() {
         return URLEncoder.encode(this.path, StandardCharsets.UTF_8);
     }
+
+    public String getImage() {
+        //return this.useBanner ? this.image : "/images/default_banner.png";
+        return image != null ? this.image : "/images/default_banner.png";
+    }
 }
