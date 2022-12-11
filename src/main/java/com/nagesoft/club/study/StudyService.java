@@ -74,16 +74,11 @@ public class StudyService {
         return study.getTags();
     }
 
-    public void addTagToStudy(Study study, String tagTitle) {
-        Tag tag = tagRepository.findByTitle(tagTitle);
-        if (tag == null) {
-            tag = tagRepository.save(Tag.builder().title(tagTitle).build());
-        }
+    public void addTagToStudy(Study study, Tag tag) {
         study.getTags().add(tag);
     }
 
-    public void removeTagToStudy(Study study, String tagTitle) {
-        Tag tag = tagRepository.findByTitle(tagTitle);
+    public void removeTagToStudy(Study study, Tag tag) {
         study.getTags().remove(tag);
     }
 

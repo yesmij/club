@@ -1,4 +1,4 @@
-package com.nagesoft.club.settings.form;
+package com.nagesoft.club.zone;
 
 import com.nagesoft.club.domain.Zone;
 import lombok.Data;

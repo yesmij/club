@@ -1,4 +1,4 @@
-package com.nagesoft.club.settings.form;
+package com.nagesoft.club.tag;
 
 import lombok.Data;
 

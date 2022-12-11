@@ -6,9 +6,10 @@ import com.nagesoft.club.account.CurrentAccount;
 import com.nagesoft.club.domain.Account;
 import com.nagesoft.club.domain.Study;
 import com.nagesoft.club.domain.Tag;
-import com.nagesoft.club.settings.form.TagForm;
+import com.nagesoft.club.tag.TagForm;
 import com.nagesoft.club.study.form.StudyDescriptionForm;
 import com.nagesoft.club.tag.TagRepository;
+import com.nagesoft.club.tag.TagService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,7 @@ public class StudySettingsController {
     private final ModelMapper modelMapper;
     private final TagRepository tagRepository;
     private final ObjectMapper objectMapper;
+    private final TagService tagService;
 
     @GetMapping("/study/{path}/settings/description")
     public String settingForm(@CurrentAccount Account account, @PathVariable String path, Model model) {
@@ -119,7 +121,9 @@ public class StudySettingsController {
         Study study = studyService.getStudyToUpdate(path, account);
         //Tag tag = Tag.builder().title(tagTitle).build();
 
-        studyService.addTagToStudy(study, tagForm.getTagTitle());
+        Tag tag = tagService.findnCreateTag(tagForm.getTagTitle());
+
+        studyService.addTagToStudy(study, tag);
 
         // todo study refresh??  & Query Tunning
 //        List<Tag> tagWhitelist = studyService.getTagWhitelist();
@@ -135,7 +139,11 @@ public class StudySettingsController {
     @PostMapping("/study/{path}/settings/tags/remove")
     public ResponseEntity removeTagToStudy(@CurrentAccount Account account, @PathVariable String path, @RequestBody TagForm tagForm) {
         Study study = studyService.getStudyToUpdate(path, account);
-        studyService.removeTagToStudy(study, tagForm.getTagTitle());
+        Tag tag = tagRepository.findByTitle(tagForm.getTagTitle());
+        if(tag == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        studyService.removeTagToStudy(study, tag);
 
         return ResponseEntity.ok().build();
     }

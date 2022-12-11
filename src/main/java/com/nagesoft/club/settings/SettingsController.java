@@ -9,7 +9,10 @@ import com.nagesoft.club.domain.Zone;
 import com.nagesoft.club.settings.form.*;
 import com.nagesoft.club.settings.validator.NicknameFormValidator;
 import com.nagesoft.club.settings.validator.PasswordFormValidator;
+import com.nagesoft.club.tag.TagForm;
 import com.nagesoft.club.tag.TagRepository;
+import com.nagesoft.club.tag.TagService;
+import com.nagesoft.club.zone.ZoneForm;
 import com.nagesoft.club.zone.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -34,6 +37,7 @@ public class SettingsController {
     private final ModelMapper modelMapper;
     private final NicknameFormValidator nicknameFormValidator;
     private final TagRepository tagRepository;
+    private final TagService tagService;
     private final AccountRepository accountRepository;
     private final ObjectMapper objectMapper;
     private final ZoneRepository zoneRepository;
@@ -163,15 +167,12 @@ public class SettingsController {
     @ResponseBody
     @PostMapping("/settings/tags/add")
     public ResponseEntity tagSave(@CurrentAccount Account account, @RequestBody TagForm tagForm) {
-        Tag tag = tagRepository.findByTitle(tagForm.getTagTitle());
-        System.out.println("tag1 = " + tag);
-        if(tag == null) {
-            tag = tagRepository.save(Tag.builder().title(tagForm.getTagTitle()).build());
-            System.out.println("tag2 = " + tag);
-        }
+        Tag tag = tagService.findnCreateTag(tagForm.getTagTitle());
         accountService.addTag(account, tag);
         return ResponseEntity.ok().build();
     }
+
+
 
     @GetMapping("/settings/zones")
     public String updateZonesForm(@CurrentAccount Account account, Model model) throws JsonProcessingException {

@@ -7,7 +7,7 @@ import com.nagesoft.club.account.SignUpForm;
 import com.nagesoft.club.tag.TagRepository;
 import com.nagesoft.club.domain.Account;
 import com.nagesoft.club.domain.Tag;
-import com.nagesoft.club.settings.form.TagForm;
+import com.nagesoft.club.tag.TagForm;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
