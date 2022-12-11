@@ -1,24 +1,27 @@
 package com.nagesoft.club.study;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nagesoft.club.account.CurrentAccount;
 import com.nagesoft.club.domain.Account;
 import com.nagesoft.club.domain.Study;
+import com.nagesoft.club.domain.Tag;
+import com.nagesoft.club.settings.form.TagForm;
 import com.nagesoft.club.study.form.StudyDescriptionForm;
+import com.nagesoft.club.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Controller
@@ -27,6 +30,8 @@ public class StudySettingsController {
     private final StudyService studyService;
     private final StudyRepository studyRepository;
     private final ModelMapper modelMapper;
+    private final TagRepository tagRepository;
+    private final ObjectMapper objectMapper;
 
     @GetMapping("/study/{path}/settings/description")
     public String settingForm(@CurrentAccount Account account, @PathVariable String path, Model model) {
@@ -91,5 +96,47 @@ public class StudySettingsController {
         studyService.updateEnable(study, false);
         attributes.addFlashAttribute("message", "배너를 비활성화했습니다.");
         return "redirect:/study/" + study.getEncodePath() + "/settings/banner";
+    }
+
+    @GetMapping("/study/{path}/settings/tags")
+    public String tagsForm(@CurrentAccount Account account, @PathVariable String path, Model model) throws JsonProcessingException {
+        Study study = studyService.getStudyToUpdate(path, account);
+
+        List<Tag> tagWhitelist = studyService.getTagWhitelist();
+        model.addAttribute("whitelist", objectMapper.writeValueAsString(tagWhitelist));
+
+        Set<Tag> tags = studyService.getStudyTags(study);
+        model.addAttribute("tags", tags.stream().map(Tag::getTitle).collect(Collectors.toList()));
+        model.addAttribute(account);
+        model.addAttribute(study);
+
+        return "study/settings/tags";
+    }
+
+    @ResponseBody
+    @PostMapping("/study/{path}/settings/tags/add")
+    public ResponseEntity addTagToStudy(@CurrentAccount Account account, @PathVariable String path, @RequestBody TagForm tagForm) {
+        Study study = studyService.getStudyToUpdate(path, account);
+        //Tag tag = Tag.builder().title(tagTitle).build();
+
+        studyService.addTagToStudy(study, tagForm.getTagTitle());
+
+        // todo study refresh??  & Query Tunning
+//        List<Tag> tagWhitelist = studyService.getTagWhitelist();
+//        model.addAttribute("whitelist", objectMapper.writeValueAsString(tagWhitelist));
+//
+//        Set<Tag> tags = studyService.getStudyTags(study);
+//        model.addAttribute("tags", tags.stream().map(Tag::getTitle).collect(Collectors.toList()));
+
+        return ResponseEntity.ok().build();
+    }
+
+    @ResponseBody
+    @PostMapping("/study/{path}/settings/tags/remove")
+    public ResponseEntity removeTagToStudy(@CurrentAccount Account account, @PathVariable String path, @RequestBody TagForm tagForm) {
+        Study study = studyService.getStudyToUpdate(path, account);
+        studyService.removeTagToStudy(study, tagForm.getTagTitle());
+
+        return ResponseEntity.ok().build();
     }
 }

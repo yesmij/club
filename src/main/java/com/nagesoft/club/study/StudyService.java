@@ -3,14 +3,19 @@ package com.nagesoft.club.study;
 import com.nagesoft.club.account.AccountRepository;
 import com.nagesoft.club.domain.Account;
 import com.nagesoft.club.domain.Study;
+import com.nagesoft.club.domain.Tag;
 import com.nagesoft.club.study.form.StudyDescriptionForm;
+import com.nagesoft.club.tag.TagRepository;
+import com.nagesoft.club.zone.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Transactional
 @RequiredArgsConstructor
@@ -18,6 +23,7 @@ import java.util.Optional;
 public class StudyService {
     private final StudyRepository studyRepository;
     private final ModelMapper modelMapper;
+    private final TagRepository tagRepository;
 
     public Study createStudy(Study study, Account account) {
         Study savedStudy = studyRepository.save(study);
@@ -59,4 +65,29 @@ public class StudyService {
     public void updateEnable(Study study, boolean enableFlag) {
         study.setUseBanner(enableFlag);
     }
+
+    public List<Tag> getTagWhitelist() {
+        return tagRepository.findAll();
+    }
+
+    public Set<Tag> getStudyTags(Study study) {
+        return study.getTags();
+    }
+
+    public void addTagToStudy(Study study, String tagTitle) {
+        Tag tag = tagRepository.findByTitle(tagTitle);
+        if (tag == null) {
+            tag = tagRepository.save(Tag.builder().title(tagTitle).build());
+        }
+        study.getTags().add(tag);
+    }
+
+    public void removeTagToStudy(Study study, String tagTitle) {
+        Tag tag = tagRepository.findByTitle(tagTitle);
+        study.getTags().remove(tag);
+    }
+
+//    public void getStudyTags(Study study) {
+//        tagRepository.
+//    }
 }
