@@ -4,8 +4,10 @@ import com.nagesoft.club.account.AccountRepository;
 import com.nagesoft.club.domain.Account;
 import com.nagesoft.club.domain.Study;
 import com.nagesoft.club.domain.Tag;
+import com.nagesoft.club.domain.Zone;
 import com.nagesoft.club.study.form.StudyDescriptionForm;
 import com.nagesoft.club.tag.TagRepository;
+import com.nagesoft.club.zone.ZoneForm;
 import com.nagesoft.club.zone.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -80,6 +82,14 @@ public class StudyService {
 
     public void removeTagToStudy(Study study, Tag tag) {
         study.getTags().remove(tag);
+    }
+
+    public void addZoneToStudy(Study study, Zone zone) {
+        study.getZones().add(zone);
+    }
+
+    public void removeZoneToStudy(Study study, Zone zone) {
+        study.getZones().remove(zone);
     }
 
 //    public void getStudyTags(Study study) {

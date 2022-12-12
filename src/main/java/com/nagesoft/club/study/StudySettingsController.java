@@ -6,10 +6,13 @@ import com.nagesoft.club.account.CurrentAccount;
 import com.nagesoft.club.domain.Account;
 import com.nagesoft.club.domain.Study;
 import com.nagesoft.club.domain.Tag;
+import com.nagesoft.club.domain.Zone;
 import com.nagesoft.club.tag.TagForm;
 import com.nagesoft.club.study.form.StudyDescriptionForm;
 import com.nagesoft.club.tag.TagRepository;
 import com.nagesoft.club.tag.TagService;
+import com.nagesoft.club.zone.ZoneForm;
+import com.nagesoft.club.zone.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +37,7 @@ public class StudySettingsController {
     private final TagRepository tagRepository;
     private final ObjectMapper objectMapper;
     private final TagService tagService;
+    private final ZoneRepository zoneRepository;
 
     @GetMapping("/study/{path}/settings/description")
     public String settingForm(@CurrentAccount Account account, @PathVariable String path, Model model) {
@@ -144,6 +148,43 @@ public class StudySettingsController {
             return ResponseEntity.badRequest().build();
         }
         studyService.removeTagToStudy(study, tag);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/study/{path}/settings/zones")
+    public String zoneForm(@CurrentAccount Account account, @PathVariable String path, Model model) throws JsonProcessingException {
+        Study study = studyService.getStudyToUpdate(path, account);
+        List<Zone> whitelist = zoneRepository.findAll();
+        Set<Zone> zones = study.getZones();
+
+        model.addAttribute("whitelist", objectMapper.writeValueAsString(whitelist));
+        System.out.println("zones = " + zones);
+        System.out.println("whitelist = " + whitelist);
+
+        model.addAttribute("zones", zones.stream().map(Zone::toString).collect(Collectors.toList()));
+        model.addAttribute(account);
+        model.addAttribute(study);
+
+        return "study/settings/zones";
+    }
+
+    @ResponseBody
+    @PostMapping("/study/{path}/settings/zones/add")
+    public ResponseEntity addZoneToStudy(@CurrentAccount Account account, @PathVariable String path, @RequestBody ZoneForm zoneForm) {
+        Study study = studyService.getStudyToUpdate(path, account);
+        Zone zone = zoneRepository.findByCityAndProvince(zoneForm.getCityName(), zoneForm.getProvinceName());
+        studyService.addZoneToStudy(study, zone);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @ResponseBody
+    @PostMapping("/study/{path}/settings/zones/remove")
+    public ResponseEntity removeZoneToStudy(@CurrentAccount Account account, @PathVariable String path, @RequestBody ZoneForm zoneForm) {
+        Study study = studyService.getStudyToUpdate(path, account);
+        Zone zone = zoneRepository.findByCityAndProvince(zoneForm.getCityName(), zoneForm.getProvinceName());
+        studyService.removeZoneToStudy(study, zone);
 
         return ResponseEntity.ok().build();
     }
