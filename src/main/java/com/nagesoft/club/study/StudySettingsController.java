@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -188,4 +189,55 @@ public class StudySettingsController {
 
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/study/{path}/settings/study")
+    public String studySetting(@CurrentAccount Account account, @PathVariable String path, Model model) {
+        Study study = studyService.getStudyToUpdate(path, account);
+        model.addAttribute(study);
+        model.addAttribute(account);
+
+        return "study/settings/study";
+    }
+
+    @PostMapping("/study/{path}/settings/study/publish")
+    public String studyPublish(@CurrentAccount Account account, @PathVariable String path, RedirectAttributes attributes, Model model) {
+        Study study = studyService.getStudyToUpdate(path, account);
+        studyService.publishStudy(study);
+        attributes.addFlashAttribute("message", "스터디를 공개설정을 변경했습니다.");
+        return "redirect:/study/" + study.getEncodePath() + "/settings/study";
+    }
+
+    @PostMapping("/study/{path}/settings/study/close")
+    public String studyClose(@CurrentAccount Account account, @PathVariable String path, RedirectAttributes attributes) {
+        Study study = studyService.getStudyToUpdate(path, account);
+        studyService.closeStudy(study);
+        attributes.addFlashAttribute("message", "스터디를 닫았습니다.");
+        return "redirect:/study/" + study.getEncodePath() + "/settings/study";
+    }
+
+    @PostMapping("/study/{path}/settings/recruit/start")
+    public String studyRecruitStart(@CurrentAccount Account account, @PathVariable String path, RedirectAttributes attributes) {
+        Study study = studyService.getStudyToUpdate(path, account);
+        if(!study.canUpdateRecruit()) {
+            attributes.addFlashAttribute("message", "1時間以内の修正はダメ🈲！！");
+            return "redirect:/study/" + study.getEncodePath() + "/settings/study";
+        }
+        studyService.startRecruitStudy(study);
+        attributes.addFlashAttribute("message", "チームメンバーを募集し始まります。");
+        return "redirect:/study/" + study.getEncodePath() + "/settings/study";
+    }
+
+    @PostMapping("/study/{path}/settings/recruit/stop")
+    public String studyRecruitStop(@CurrentAccount Account account, @PathVariable String path, RedirectAttributes attributes) {
+        Study study = studyService.getStudyToUpdate(path, account);
+        if(!study.canUpdateRecruit()) {
+            attributes.addFlashAttribute("message", "1時間以内の修正はダメ🈲！！");
+            return "redirect:/study/" + study.getEncodePath() + "/settings/study";
+        }
+        studyService.stopRecruitStudy(study);
+        attributes.addFlashAttribute("message", "チームメンバーを募集を終了しました。");
+        return "redirect:/study/" + study.getEncodePath() + "/settings/study";
+    }
+
+
 }
