@@ -18,12 +18,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -239,5 +239,39 @@ public class StudySettingsController {
         return "redirect:/study/" + study.getEncodePath() + "/settings/study";
     }
 
+    @PostMapping("/study/{path}/settings/study/path")
+    public String studyPath(@CurrentAccount Account account, @PathVariable String path, RedirectAttributes attributes,
+                             @RequestParam String newPath) {
+        Study study = studyService.getStudyToUpdate(path, account);
+        if(!studyService.isValidatePath(newPath)) {
+            attributes.addFlashAttribute("studyPathError", "PATHは　ダメ🈲！！");
+            return "redirect:/study/" + study.getEncodePath() + "/settings/study";
+        }
+
+        Study newStudy = studyService.updatePath(study, newPath);
+        attributes.addFlashAttribute("message", "PATHの修正を　いたしました。");
+        return "redirect:/study/" + newStudy.getEncodePath() + "/settings/study";
+    }
+
+    @PostMapping("/study/{path}/settings/study/title")
+    public String studyTitle(@CurrentAccount Account account, @PathVariable String path, RedirectAttributes attributes,
+                             @RequestParam String newTitle) {
+        Study study = studyService.getStudyToUpdate(path, account);
+        if(!studyService.isValidateTitle(newTitle)) {
+            attributes.addFlashAttribute("studyTitleError", "タイトルは　ダメ🈲！！");
+            return "redirect:/study/" + study.getEncodePath() + "/settings/study";
+        }
+        studyService.updateTitle(study, newTitle);
+        attributes.addFlashAttribute("message", "タイトルの修正を　いたしました。");
+        return "redirect:/study/" + study.getEncodePath() + "/settings/study";
+    }
+
+    @PostMapping("/study/{path}/settings/study/remove")
+    public String studyRemove(@CurrentAccount Account account, @PathVariable String path, RedirectAttributes attributes) {
+        Study study = studyService.getStudyToUpdate(path, account);
+
+        studyService.removeStudy(study);
+        return "redirect:/";
+    }
 
 }

@@ -1,23 +1,19 @@
 package com.nagesoft.club.study;
 
-import com.nagesoft.club.account.AccountRepository;
 import com.nagesoft.club.domain.Account;
 import com.nagesoft.club.domain.Study;
 import com.nagesoft.club.domain.Tag;
 import com.nagesoft.club.domain.Zone;
 import com.nagesoft.club.study.form.StudyDescriptionForm;
+import com.nagesoft.club.study.form.StudyForm;
 import com.nagesoft.club.tag.TagRepository;
-import com.nagesoft.club.zone.ZoneForm;
-import com.nagesoft.club.zone.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Transactional
@@ -107,6 +103,41 @@ public class StudyService {
 
     public void stopRecruitStudy(Study study) {
         study.stopRecruit();
+    }
+
+    public void updateTitle(Study study, String newTitle) {
+        study.setTitle(newTitle);
+    }
+
+    public Study updatePath(Study study, String newPath) {
+        study.setPath(newPath);
+        return studyRepository.findByPath(newPath);
+    }
+
+    public boolean isValidatePath(String newPath) {
+        if(!newPath.matches(StudyForm.VALID_PATH_PATTERN)) {
+            return false;
+        }
+        return !studyRepository.existsByPath(newPath);
+    }
+
+    public boolean isValidateTitle(String newTitle) {
+        if(newTitle.length() >= 50) {
+            return false;
+        }
+        return newTitle.length() <= 50;
+    }
+
+    public boolean isValidateRemove(Study study) {
+        return !study.isPublished() && study.isClosed();
+    }
+
+    public void removeStudy(Study study) {
+        if(study.isRemovable()) {
+            studyRepository.delete(study);
+        } else {
+            throw new IllegalArgumentException("削除は不可ですね！！");
+        }
     }
 
 //    public void getStudyTags(Study study) {
