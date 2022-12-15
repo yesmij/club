@@ -42,18 +42,41 @@ public class StudyService {
 
     public Study getStudyToUpdate(String path, Account account) {
         //Optional<Account> byId = accountRepository.findById(account.getId());
-        Study study = getStudy(path);
-        if(!account.isManagerOf(study)) {
-            throw new AccessDeniedException("ㅅㅏ용할 수 없습니다.");
-        }
+        Study study = studyRepository.findByPath(path);
+        checkIfExistingStudy(path, study);
+        checkManagerOf(account, study);
         return study;
     }
 
-    private Study getStudy(String path) {
-        Study study = studyRepository.findByPath(path);
-        if(study == null) {
-            throw new IllegalArgumentException("해당 스터디가 아닙니다. path = " + path );
+    private void checkManagerOf(Account account, Study study) {
+        if(!account.isManagerOf(study)) {
+            throw new AccessDeniedException("ㅅㅏ용할 수 없습니다.");
         }
+    }
+    private void checkIfExistingStudy(String path, Study study) {
+        if(study == null) {
+            throw new IllegalArgumentException("해당 스터디가 아닙니다. path = " + path);
+        }
+    }
+
+    public Study getWithManagerByStudy(String path, Account account) {
+        Study study = studyRepository.findStudyWithManagerByPath(path);
+        checkIfExistingStudy(path, study);
+        checkManagerOf(account, study);
+        return study;
+    }
+
+    public Study getWithTagsAndManagerByStudy(String path, Account account) {
+        Study study = studyRepository.findStudyWithTagsAndManagersByPath(path);
+        checkIfExistingStudy(path, study);
+        checkManagerOf(account, study);
+        return study;
+    }
+
+    public Study getWithZonesAndManagerByStudy(String path, Account account) {
+        Study study = studyRepository.findStudyWithZonesAndManagersByPath(path);
+        checkIfExistingStudy(path, study);
+        checkManagerOf(account, study);
         return study;
     }
 

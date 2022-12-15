@@ -10,6 +10,15 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+@NamedEntityGraph(name = "Study.withTagsAndManagers", attributeNodes = {
+        @NamedAttributeNode("tags"),
+        @NamedAttributeNode("managers")})
+@NamedEntityGraph(name = "Study.withZonesAndManagers", attributeNodes = {
+        @NamedAttributeNode("zones"),
+        @NamedAttributeNode("managers")})
+@NamedEntityGraph(name = "study.withManager", attributeNodes = {
+        @NamedAttributeNode("managers")
+})
 @NamedEntityGraph(name = "study.withAll", attributeNodes = {
             @NamedAttributeNode("managers"),
             @NamedAttributeNode("members"),
