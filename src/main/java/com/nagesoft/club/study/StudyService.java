@@ -81,7 +81,7 @@ public class StudyService {
     }
 
     public void updateBanner(Study study, String image) {
-        study.setImage(image);
+        study.setProfileImage(image);
     }
 
     public void updateEnable(Study study, boolean enableFlag) {
@@ -161,6 +161,21 @@ public class StudyService {
         } else {
             throw new IllegalArgumentException("削除は不可ですね！！");
         }
+    }
+
+    public void joinStudy(Study study, Account account) {
+        if(study.getMembers().contains(account) && study.getManagers().contains(account)) {
+            throw new RuntimeException("이미 가입한 회원입니다. 또는 매니저");
+        }
+        study.addMember(account);
+        //study.getMembers().add(account);
+    }
+
+    public void leaveStudy(Study study, Account account) {
+        if(!study.getMembers().contains(account) && study.getManagers().contains(account)) {
+            throw new RuntimeException("가입한 회원이 아닙니다. 또는 매니저");
+        }
+        study.getMembers().remove(account);
     }
 
 //    public void getStudyTags(Study study) {

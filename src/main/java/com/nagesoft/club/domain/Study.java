@@ -49,7 +49,7 @@ public class Study {
     private String fullDescription;
 
     @Lob @Basic(fetch = FetchType.EAGER)
-    private String image;
+    private String profileImage;
 
     @ManyToMany
     private Set<Tag> tags = new HashSet<>();
@@ -94,9 +94,9 @@ public class Study {
         return URLEncoder.encode(this.path, StandardCharsets.UTF_8);
     }
 
-    public String getImage() {
+    public String getProfileImage() {
         //return this.useBanner ? this.image : "/images/default_banner.png";
-        return image != null ? this.image : "/images/default_banner.png";
+        return profileImage != null ? this.profileImage : "/images/default_banner.png";
     }
 
     public void publish() {
@@ -142,5 +142,9 @@ public class Study {
 
     public boolean isRemovable() {
         return !this.published;
+    }
+
+    public void addMember(Account account) {
+        this.getMembers().add(account);
     }
 }
