@@ -41,7 +41,7 @@ public class StudySettingsController {
 
     @GetMapping("/study/{path}/settings/description")
     public String settingForm(@CurrentAccount Account account, @PathVariable String path, Model model) {
-        Study study = studyService.getWithManagerByStudy(path, account);
+        Study study = studyService.getStudyToUpdate(path, account);
 
         model.addAttribute(account);
         model.addAttribute(study);
@@ -65,7 +65,7 @@ public class StudySettingsController {
         //studyService.updateDescription(path, studyDescriptionForm);
         attributes.addFlashAttribute("message", "수정했습니다.");
         //System.out.println("Controller : study.Desc = " + study.getFullDescription());
-        model.addAttribute(account);
+//        model.addAttribute(account);
         return "redirect:/study/" + study.getEncodePath() + "/settings/description";
     }
 
