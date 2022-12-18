@@ -126,6 +126,4 @@ class StudySettingsControllerTest {
         Assertions.assertThat("short description").isNotEqualTo(updatedStudy.getShortDescription());
         Assertions.assertThat("full description").isNotEqualTo(updatedStudy.getFullDescription());
     }
-
-
 }
