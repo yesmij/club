@@ -63,9 +63,14 @@ public class Account {
         this.joinedAt = LocalDateTime.now();
     }
 
-    public boolean isManagerOf(Study study) {
-        return study.getManagers().contains(this);
-    }
+//    public boolean isManagerOf(Study study) {
+//        return study.getManagers().contains(this);
+//    }  // todo 오류1 : manager
+//
+//    public boolean isMemberOf(Study study) {
+//        return this.members
+//        // return study.getMembers().contains(this); //todo 오류2 : member
+//    }
 
 //    public void passwordEncode(String rawPassword) {
 //        this.password = passwordEncoder.encode(rawPassword);

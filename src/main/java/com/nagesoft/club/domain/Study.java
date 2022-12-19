@@ -10,6 +10,9 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+@NamedEntityGraph(name = "study.withMember", attributeNodes = {
+        @NamedAttributeNode("members")
+})
 @NamedEntityGraph(name = "Study.withTagsAndManagers", attributeNodes = {
         @NamedAttributeNode("tags"),
         @NamedAttributeNode("managers")})
@@ -146,5 +149,13 @@ public class Study {
 
     public void addMember(Account account) {
         this.getMembers().add(account);
+    }
+
+    public boolean isMemberOf(Account account) {
+        return this.members.contains(account);
+    }
+
+    public boolean isManagerOf(Account account) {
+        return this.managers.contains(account);
     }
 }

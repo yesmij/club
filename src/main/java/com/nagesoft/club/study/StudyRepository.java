@@ -16,6 +16,9 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     @EntityGraph(value = "study.withManager", type = EntityGraph.EntityGraphType.FETCH)
     Study findStudyWithManagerByPath(String path);
 
+    @EntityGraph(value = "study.withMember", type = EntityGraph.EntityGraphType.FETCH)
+    Study findStudyWithMemberByPath(String path);
+
     @EntityGraph(value = "Study.withTagsAndManagers", type = EntityGraph.EntityGraphType.FETCH)
     Study findStudyWithTagsAndManagersByPath(String path);
 

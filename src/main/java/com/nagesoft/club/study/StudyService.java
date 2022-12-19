@@ -49,7 +49,7 @@ public class StudyService {
     }
 
     private void checkManagerOf(Account account, Study study) {
-        if(!account.isManagerOf(study)) {
+        if(!study.isManagerOf(account)) {
             throw new AccessDeniedException("ㅅㅏ용할 수 없습니다.");
         }
     }
@@ -58,12 +58,24 @@ public class StudyService {
             throw new IllegalArgumentException("해당 스터디가 아닙니다. path = " + path);
         }
     }
-
     public Study getWithManagerByStudy(String path, Account account) {
         Study study = studyRepository.findStudyWithManagerByPath(path);
         checkIfExistingStudy(path, study);
         checkManagerOf(account, study);
         return study;
+    }
+
+    public Study getWithMemberByStudy(String path, Account account) {
+        Study study = studyRepository.findStudyWithManagerByPath(path);
+        checkIfExistingStudy(path, study);
+        checkMemberOf(account, study);
+        return study;
+    }
+
+    private void checkMemberOf(Account account, Study study) {
+        if(!study.isMemberOf(account)) {
+            throw new AccessDeniedException("멤버가 아닙니다.");
+        }
     }
 
     public Study getWithTagsAndManagerByStudy(String path, Account account) {
