@@ -158,4 +158,5 @@ public class Study {
     public boolean isManagerOf(Account account) {
         return this.managers.contains(account);
     }
+
 }

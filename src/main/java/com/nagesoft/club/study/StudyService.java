@@ -1,9 +1,7 @@
 package com.nagesoft.club.study;
 
-import com.nagesoft.club.domain.Account;
-import com.nagesoft.club.domain.Study;
-import com.nagesoft.club.domain.Tag;
-import com.nagesoft.club.domain.Zone;
+import com.nagesoft.club.domain.*;
+import com.nagesoft.club.event.EventRepository;
 import com.nagesoft.club.study.form.StudyDescriptionForm;
 import com.nagesoft.club.study.form.StudyForm;
 import com.nagesoft.club.tag.TagRepository;
@@ -13,6 +11,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -23,6 +22,7 @@ public class StudyService {
     private final StudyRepository studyRepository;
     private final ModelMapper modelMapper;
     private final TagRepository tagRepository;
+    private final EventRepository eventRepository;
 
     public Study createStudy(Study study, Account account) {
         Study savedStudy = studyRepository.save(study);
@@ -66,9 +66,9 @@ public class StudyService {
     }
 
     public Study getWithMemberByStudy(String path, Account account) {
-        Study study = studyRepository.findStudyWithManagerByPath(path);
+        Study study = studyRepository.findStudyWithMemberByPath(path);
         checkIfExistingStudy(path, study);
-        checkMemberOf(account, study);
+        //checkMemberOf(account, study);
         return study;
     }
 
@@ -188,6 +188,13 @@ public class StudyService {
             throw new RuntimeException("가입한 회원이 아닙니다. 또는 매니저");
         }
         study.getMembers().remove(account);
+    }
+
+    public void createEvent(Event event, Account account, Study study) {
+        event.setCreateBy(account);
+        event.setCreateDateTime(LocalDateTime.now());
+        event.setStudy(study);
+        eventRepository.save(event);
     }
 
 //    public void getStudyTags(Study study) {

@@ -18,10 +18,10 @@ public class EventForm {
 
     private String description;
 
-    private EventType eventType;
+    private EventType eventType = EventType.FIFS;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private LocalDateTime enrollmentDateTime;
+    private LocalDateTime endEnrollmentDateTime;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime startDateTime;
