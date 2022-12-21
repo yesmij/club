@@ -18,7 +18,7 @@ public class EventForm {
 
     private String description;
 
-    private EventType eventType = EventType.FIFS;
+    private EventType eventType = EventType.FCFS;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime endEnrollmentDateTime;

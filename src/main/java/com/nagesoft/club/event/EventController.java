@@ -23,11 +23,12 @@ public class EventController {
 
     private final StudyService studyService;
     private final ModelMapper modelMapper;
-    private final EventFormValidator eventFormValidator;
+    private final EventValdator eventValdator;
+    private final EventService eventService;
 
     @InitBinder("eventForm")
     public void init(WebDataBinder webDataBinder) {
-        webDataBinder.addValidators(eventFormValidator);
+        webDataBinder.addValidators(eventValdator);
     }
 
     @GetMapping("/new-event")
@@ -42,16 +43,16 @@ public class EventController {
     @PostMapping("/new-event")
     public String eventSave(@CurrentAccount Account account, @PathVariable String path, @Valid EventForm eventForm,
                             Errors errors, Model model, RedirectAttributes attributes) {
-        Study study = studyService.getWithMemberByStudy(path, account);
+        Study study = studyService.getWithManagerByStudy(path, account);
         if(errors.hasErrors()) {
             model.addAttribute(account);
             model.addAttribute(study);
             return "event/event-form";
         }
 
-        studyService.createEvent(modelMapper.map(eventForm, Event.class), account, study);
+        Event event = eventService.createEvent(modelMapper.map(eventForm, Event.class), account, study);
         attributes.addFlashAttribute("message", "이벤트 등록을 완료했습니다.");
 
-        return "redirect:/study/" + study.getEncodePath() + "/new-event";
+        return "redirect:/study/" + study.getEncodePath() + "/events/" + event.getId();
     }
 }

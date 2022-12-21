@@ -190,13 +190,6 @@ public class StudyService {
         study.getMembers().remove(account);
     }
 
-    public void createEvent(Event event, Account account, Study study) {
-        event.setCreateBy(account);
-        event.setCreateDateTime(LocalDateTime.now());
-        event.setStudy(study);
-        eventRepository.save(event);
-    }
-
 //    public void getStudyTags(Study study) {
 //        tagRepository.
 //    }
