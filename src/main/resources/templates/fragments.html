@@ -5,7 +5,7 @@
 
 <head th:fragment="head">
     <meta charset="UTF-8">
-    <title>Yokoso Club</title>
+    <title>Yokoso Club!!</title>
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,400,500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.min.css" />
@@ -52,6 +52,10 @@
         .tooltip,
         .popover {
             font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        }
+
+        table th {
+            font-weight: lighter;
         }
     </style>
 </head>
@@ -284,7 +288,7 @@
     <script src="/node_modules/summernote/dist/summernote-bs4.js"></script>
     <script type="application/javascript">
         $(function () {
-            $('#fullDescription').summernote({
+            $('.editor').summernote({
                 fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Noto Sans KR', 'Merriweather'],
                 placeholder: '스터디의 목표, 일정, 진행 방식, 사용할 교재 또는 인터넷 강좌 그리고 모집중인 스터디원 등 스터디에 대해 자세히 적어 주세요.',
                 tabsize: 2,
@@ -349,7 +353,7 @@
         // add a class to Tagify's input element
         tagify.DOM.input.classList.add('form-control');
         // re-place Tagify's input element outside of the  element (tagify.DOM.scope), just before it
-        // tagify.DOM.scope.parentNode.insertBefore(tagify.DOM.input, tagify.DOM.scope);
+        tagify.DOM.scope.parentNode.insertBefore(tagify.DOM.input, tagify.DOM.scope);
     });
 </script>
 
@@ -394,7 +398,7 @@
             // add a class to Tagify's input element
             tagify.DOM.input.classList.add('form-control');
             // re-place Tagify's input element outside of the  element (tagify.DOM.scope), just before it
-            //tagify.DOM.scope.parentNode.insertBefore(tagify.DOM.input, tagify.DOM.scope);
+            tagify.DOM.scope.parentNode.insertBefore(tagify.DOM.input, tagify.DOM.scope);
         });
     </script>
 </div>
@@ -443,9 +447,4 @@
             // add a class to Tagify's input element
             tagify.DOM.input.classList.add('form-control');
             // re-place Tagify's input element outside of the  element (tagify.DOM.scope), just before it
-            // tagify.DOM.scope.parentNode.insertBefore(tagify.DOM.input, tagify.DOM.scope);
-        });
-    </script>
-</div>
-
-</html>
+            tagify.DOM.scope.parentNode.insertBefore(tagify.DOM.input, tagify.DOM.scope);

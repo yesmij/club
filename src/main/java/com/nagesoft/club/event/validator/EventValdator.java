@@ -1,5 +1,6 @@
-package com.nagesoft.club.event;
+package com.nagesoft.club.event.validator;
 
+import com.nagesoft.club.event.form.EventForm;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

@@ -1,4 +1,4 @@
-package com.nagesoft.club.event;
+package com.nagesoft.club.event.form;
 
 import com.nagesoft.club.domain.EventType;
 import lombok.Data;
