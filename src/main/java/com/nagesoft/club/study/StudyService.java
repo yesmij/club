@@ -190,6 +190,12 @@ public class StudyService {
         study.getMembers().remove(account);
     }
 
+    public Study getStudy(String path) {
+        Study study = studyRepository.findByPath(path);
+        checkIfExistingStudy(path, study);
+        return study;
+    }
+
 //    public void getStudyTags(Study study) {
 //        tagRepository.
 //    }

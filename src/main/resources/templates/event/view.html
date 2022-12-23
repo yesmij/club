@@ -139,8 +139,8 @@
         <dl class="col-3 pt-3 text-right">
             <dt class="font-weight-light">모집 방법</dt>
             <dd>
-                <span th:if="${event.eventType == T(com.studyolle.domain.EventType).FCFS}">선착순</span>
-                <span th:if="${event.eventType == T(com.studyolle.domain.EventType).CONFIRMATIVE}">관리자 확인</span>
+                <span th:if="${event.eventType == T(com.nagesoft.club.domain.EventType).FCFS}">선착순</span>
+                <span th:if="${event.eventType == T(com.nagesoft.club.domain.EventType).CONFIRMATIVE}">관리자 확인</span>
             </dd>
 
             <dt class="font-weight-light">모집 인원</dt>
@@ -165,12 +165,12 @@
 
             <dt class="font-weight-light">모임장</dt>
             <dd>
-                <a th:href="@{'/profile/' + ${event.createdBy.nickname}}" class="text-decoration-none">
-                    <svg th:if="${#strings.isEmpty(event.createdBy?.profileImage)}"
-                         th:data-jdenticon-value="${event.createdBy.nickname}" width="24" height="24" class="rounded border bg-light"></svg>
-                    <img th:if="${!#strings.isEmpty(event.createdBy?.profileImage)}"
-                         th:src="${event.createdBy?.profileImage}" width="24" height="24" class="rounded border"/>
-                    <span th:text="${event.createdBy.nickname}"></span>
+                <a th:href="@{'/profile/' + ${event.getCreateBy.nickname}}" class="text-decoration-none">
+                    <svg th:if="${#strings.isEmpty(event.getCreateBy?.profileImage)}"
+                         th:data-jdenticon-value="${event.getCreateBy.nickname}" width="24" height="24" class="rounded border bg-light"></svg>
+                    <img th:if="${!#strings.isEmpty(event.getCreateBy?.profileImage)}"
+                         th:src="${event.getCreateBy?.profileImage}" width="24" height="24" class="rounded border"/>
+                    <span th:text="${event.getCreateBy.nickname}"></span>
                 </a>
             </dd>
 
