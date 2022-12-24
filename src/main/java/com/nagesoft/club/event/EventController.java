@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.util.Optional;
+import java.util.List;
 
 @RequestMapping("/study/{path}")
 @RequiredArgsConstructor
@@ -70,4 +70,15 @@ public class EventController {
         model.addAttribute(event);
         return "event/view";
     }
+
+//    @GetMapping("/events")
+//    public String events(@CurrentAccount Account account, @PathVariable String path, Model model) {
+//        Study study = studyService.getStudy(path);
+//        List<Event> events = eventService.currentEvents();
+//        model.addAttribute(account);
+//        model.addAttribute(study);
+//        model.addAttribute(events);
+//
+//        return "study/events";
+//    }
 }

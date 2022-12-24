@@ -196,6 +196,10 @@ public class StudyService {
         return study;
     }
 
+    public List<Event> getEvents(Study study) {
+        return eventRepository.findByStudy(study);
+    }
+
 //    public void getStudyTags(Study study) {
 //        tagRepository.
 //    }

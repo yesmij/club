@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
@@ -28,4 +30,13 @@ public class EventService {
     public Optional<Event> getEvent(Long eventId) {
         return eventRepository.findById(eventId);
     }
+
+//    public List<Event> currentEvents() {
+//        List<Event> events = eventRepository.findAll()
+//                .stream().map(event -> {event.getEndDateTime().isBefore(LocalDateTime.now())} )
+//                .collect(Collectors.toList());
+//
+//        // 모든 이벤트에서 현재 진행중인 이벤트 : 현재시간 < 끝시간
+//        return null;
+//    }
 }
