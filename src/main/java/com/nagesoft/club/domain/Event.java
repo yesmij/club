@@ -71,6 +71,10 @@ public class Event {
         return false;
     }
 
+    public int numberOfRemainSpots() {
+        return this.limitOfEnrollments - (int) this.enrollments.stream().filter(Enrollment::isAccepted).count();
+    }
+
     private boolean isAlreadyEnrolled(UserAccount userAccount) {
         Account account = userAccount.getAccount();
         for (Enrollment e : this.enrollments) {

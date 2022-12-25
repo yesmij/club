@@ -4,6 +4,7 @@ import com.nagesoft.club.account.CurrentAccount;
 import com.nagesoft.club.domain.Account;
 import com.nagesoft.club.domain.Event;
 import com.nagesoft.club.domain.Study;
+import com.nagesoft.club.event.EventRepository;
 import com.nagesoft.club.study.form.StudyForm;
 import com.nagesoft.club.study.validator.StudyFormValidator;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class StudyController {
     private final ModelMapper modelMapper;
     private final StudyRepository studyRepository;
     private final StudyFormValidator studyFormValidator;
+    private final EventRepository eventRepository;
 
     @InitBinder("studyForm")
     public void init(WebDataBinder webDataBinder) {
@@ -88,25 +90,25 @@ public class StudyController {
     }
 
     @GetMapping("/study/{path}/events")
-    public String eventsOfStudy(@CurrentAccount Account account, @PathVariable String path) {
+    public String eventsOfStudy(@CurrentAccount Account account, @PathVariable String path, Model model) {
         Study study = studyRepository.findByPath(path);
-        List<Event> events = studyService.getEvents(study);
-        List<Boolean> oldEvent = null;
-        List<Boolean> newEvent = null;
+        List<Event> events = eventRepository.findByStudyOrderByStartDateTime(study);
 
-        if(events.size() > 0 ) {
-            oldEvent = new ArrayList<>();
-            for (Event m : events) {
-                Boolean before = m.getEndDateTime().isAfter(LocalDateTime.now());
-                oldEvent.add(before);
+        List<Event> oldEvents = new ArrayList<>();
+        List<Event> newEvents = new ArrayList<>();
+        events.forEach( a -> {
+            if (a.getEndDateTime().isBefore(LocalDateTime.now())) {
+                oldEvents.add(a);
+            } else {
+                newEvents.add(a);
             }
+        });
 
-            newEvent = new ArrayList<>();
-            for (Event m : events) {
-                Boolean before = m.getEndDateTime().isBefore(LocalDateTime.now());
-                newEvent.add(before);
-            }
-        }
+        model.addAttribute(account);
+        model.addAttribute(study);
+        model.addAttribute(events);
+        model.addAttribute("newEvents", newEvents);
+        model.addAttribute("oldEvents", oldEvents);
 
         return "study/events";
     }
