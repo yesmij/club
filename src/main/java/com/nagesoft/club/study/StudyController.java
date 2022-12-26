@@ -5,6 +5,7 @@ import com.nagesoft.club.domain.Account;
 import com.nagesoft.club.domain.Event;
 import com.nagesoft.club.domain.Study;
 import com.nagesoft.club.event.EventRepository;
+import com.nagesoft.club.event.form.EventForm;
 import com.nagesoft.club.study.form.StudyForm;
 import com.nagesoft.club.study.validator.StudyFormValidator;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Controller
@@ -111,5 +113,19 @@ public class StudyController {
         model.addAttribute("oldEvents", oldEvents);
 
         return "study/events";
+    }
+
+    @GetMapping("/study/{path}/events/{id}/edit")
+    public String eventEditFormOfStudy(@CurrentAccount Account account, @PathVariable String path,
+                                       @PathVariable Long id, Model model) {
+        Study study = studyService.getStudy(path);
+//        Optional<Event> event = eventRepository.findById(id);
+        Event event = eventRepository.findById(id).orElseThrow();
+        model.addAttribute(account);
+        model.addAttribute(study);
+        model.addAttribute(event);
+        model.addAttribute(modelMapper.map(event, EventForm.class));
+
+        return "event/update-form";
     }
 }
