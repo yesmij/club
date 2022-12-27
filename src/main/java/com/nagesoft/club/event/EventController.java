@@ -92,12 +92,13 @@ public class EventController {
                                    @PathVariable Long id, @Valid EventForm eventForm, Errors errors, Model model) {
         Study study = studyService.getStudyToUpdate(path, account);
         Event event = eventRepository.findById(id).orElseThrow();
-
+        eventValdator.isLimitOfEnrollments(eventForm, event, errors);
         
-        if(errors.hasErrors() || eventValdator.isLimitOfEnrollments(eventForm, event, errors)) {
+        if(errors.hasErrors()) {
             model.addAttribute(account);
             model.addAttribute(study);
             model.addAttribute(event);
+            return "event/update-form";
         }
         
         eventForm.setEventType(event.getEventType());
@@ -105,5 +106,15 @@ public class EventController {
 
         return "redirect:/study/" + study.getEncodePath() + "/events/" + event.getId();
 
+    }
+
+    @DeleteMapping("/events/{id}")
+    public String deleteEventOfStudy(@CurrentAccount Account account, @PathVariable String path,
+                                     @PathVariable Long id) {
+        Study study = studyService.getStudyToUpdate(path, account);
+        Event event = eventRepository.findById(id).orElseThrow();
+        eventService.deleteEvent(event);
+
+        return "redirect:/study/" + study.getEncodePath() + "/events";
     }
 }

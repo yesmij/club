@@ -53,10 +53,9 @@ public class EventValdator implements Validator {
         return eventForm.getEndDateTime().isBefore(eventForm.getStartDateTime());
     }
 
-    public boolean isLimitOfEnrollments(EventForm eventForm, Event event, Errors errors) {
-        if(eventForm.getLimitOfEnrollments() < event.getLimitOfEnrollments()) {
-            errors.rejectValue("limitOfEnrollments", "wrong.data", "인원 적게 세팅은 다메");
+    public void isLimitOfEnrollments(EventForm eventForm, Event event, Errors errors) {
+        if(eventForm.getLimitOfEnrollments() < event.getNumberOfAcceptedEnrollments()) {
+            errors.rejectValue("limitOfEnrollments", "wrong.data", "현재 참가한 인원수보다 커야 합니다.");
         }
-        return false;
     }
 }
