@@ -115,17 +115,4 @@ public class StudyController {
         return "study/events";
     }
 
-    @GetMapping("/study/{path}/events/{id}/edit")
-    public String eventEditFormOfStudy(@CurrentAccount Account account, @PathVariable String path,
-                                       @PathVariable Long id, Model model) {
-        Study study = studyService.getStudy(path);
-//        Optional<Event> event = eventRepository.findById(id);
-        Event event = eventRepository.findById(id).orElseThrow();
-        model.addAttribute(account);
-        model.addAttribute(study);
-        model.addAttribute(event);
-        model.addAttribute(modelMapper.map(event, EventForm.class));
-
-        return "event/update-form";
-    }
 }

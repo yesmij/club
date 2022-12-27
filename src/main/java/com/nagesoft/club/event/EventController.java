@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RequestMapping("/study/{path}")
 @RequiredArgsConstructor
@@ -71,14 +72,38 @@ public class EventController {
         return "event/view";
     }
 
-//    @GetMapping("/events")
-//    public String events(@CurrentAccount Account account, @PathVariable String path, Model model) {
-//        Study study = studyService.getStudy(path);
-//        List<Event> events = eventService.currentEvents();
-//        model.addAttribute(account);
-//        model.addAttribute(study);
-//        model.addAttribute(events);
-//
-//        return "study/events";
-//    }
+
+    @GetMapping("/events/{id}/edit")
+    public String eventEditFormOfStudy(@CurrentAccount Account account, @PathVariable String path,
+                                       @PathVariable Long id, Model model) {
+        Study study = studyService.getStudyToUpdate(path, account);
+//        Optional<Event> event = eventRepository.findById(id);
+        Event event = eventRepository.findById(id).orElseThrow();
+        model.addAttribute(account);
+        model.addAttribute(study);
+        model.addAttribute(event);
+        model.addAttribute(modelMapper.map(event, EventForm.class));
+
+        return "event/update-form";
+    }
+
+    @PostMapping("/events/{id}/edit")
+    public String eventEditOfStudy(@CurrentAccount Account account, @PathVariable String path,
+                                   @PathVariable Long id, @Valid EventForm eventForm, Errors errors, Model model) {
+        Study study = studyService.getStudyToUpdate(path, account);
+        Event event = eventRepository.findById(id).orElseThrow();
+
+        
+        if(errors.hasErrors() || eventValdator.isLimitOfEnrollments(eventForm, event, errors)) {
+            model.addAttribute(account);
+            model.addAttribute(study);
+            model.addAttribute(event);
+        }
+        
+        eventForm.setEventType(event.getEventType());
+        eventService.updateEvent(event, eventForm);
+
+        return "redirect:/study/" + study.getEncodePath() + "/events/" + event.getId();
+
+    }
 }

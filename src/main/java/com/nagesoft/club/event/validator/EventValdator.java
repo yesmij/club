@@ -1,5 +1,6 @@
 package com.nagesoft.club.event.validator;
 
+import com.nagesoft.club.domain.Event;
 import com.nagesoft.club.event.form.EventForm;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -50,5 +51,12 @@ public class EventValdator implements Validator {
 
     private boolean isValidEndDateTime(EventForm eventForm) {
         return eventForm.getEndDateTime().isBefore(eventForm.getStartDateTime());
+    }
+
+    public boolean isLimitOfEnrollments(EventForm eventForm, Event event, Errors errors) {
+        if(eventForm.getLimitOfEnrollments() < event.getLimitOfEnrollments()) {
+            errors.rejectValue("limitOfEnrollments", "wrong.data", "인원 적게 세팅은 다메");
+        }
+        return false;
     }
 }
