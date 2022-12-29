@@ -117,4 +117,14 @@ public class EventController {
 
         return "redirect:/study/" + study.getEncodePath() + "/events";
     }
+
+    @PostMapping("/events/{id}/enroll")
+    public String eventEnroll(@CurrentAccount Account account, @PathVariable String path, @PathVariable Long id,
+                              Model model, RedirectAttributes attributes) {
+        Study study = studyService.getStudy(path);
+        Event event = eventRepository.findById(id).orElseThrow();
+        eventService.enrollEvent(event, account);
+
+        return "redirect:/study/" + study.getEncodePath() + "/events/" + event.getId();
+    }
 }

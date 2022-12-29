@@ -1,14 +1,15 @@
 package com.nagesoft.club.event;
 
-import com.nagesoft.club.domain.Account;
-import com.nagesoft.club.domain.Event;
-import com.nagesoft.club.domain.Study;
+import com.nagesoft.club.domain.*;
 import com.nagesoft.club.event.form.EventForm;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -20,6 +21,7 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final ModelMapper modelMapper;
+    private final EnrollmentRepository enrollmentRepository;
 
 
     public Event createEvent(Event event, Account account, Study study) {
@@ -43,12 +45,22 @@ public class EventService {
         eventRepository.delete(event);
     }
 
-//    public List<Event> currentEvents() {
-//        List<Event> events = eventRepository.findAll()
-//                .stream().map(event -> {event.getEndDateTime().isBefore(LocalDateTime.now())} )
-//                .collect(Collectors.toList());
-//
-//        // 모든 이벤트에서 현재 진행중인 이벤트 : 현재시간 < 끝시간
-//        return null;
-//    }
+    public void enrollEvent(Event event, Account account) {
+
+        // 가입이력 있는지 확인
+        if(!enrollmentRepository.existsByAccountAndEvent(account, event)) {
+
+            Enrollment enrollment = new Enrollment();
+
+            enrollment.setAccepted(event.isAbleToAcceptWaitingEnrollment());
+            enrollment.setAccount(account);
+            enrollment.setEvent(event);
+            enrollment.setEnrolledAt(LocalDateTime.now());
+            enrollment.setEvent(event);
+            event.addEnrollment(enrollment);
+            enrollmentRepository.save(enrollment);
+//        event.getEnrollments().add(enrollment);
+        }
+    }
+
 }
