@@ -6,6 +6,7 @@ import com.nagesoft.club.domain.Event;
 import com.nagesoft.club.domain.Study;
 import com.nagesoft.club.event.form.EventForm;
 import com.nagesoft.club.event.validator.EventValdator;
+import com.nagesoft.club.study.StudyRepository;
 import com.nagesoft.club.study.StudyService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -30,6 +31,7 @@ public class EventController {
     private final EventValdator eventValdator;
     private final EventService eventService;
     private final EventRepository eventRepository;
+    private final StudyRepository studyRepository;
 
     @InitBinder("eventForm")
     public void init(WebDataBinder webDataBinder) {
@@ -64,7 +66,7 @@ public class EventController {
     @GetMapping("/events/{eventId}")
     public String eventView(@CurrentAccount Account account, @PathVariable String path, @PathVariable Long eventId, Model model) {
 //        Study study = studyService.getWithMemberByStudy(path, account);
-        Study study = studyService.getStudy(path);
+        Study study = studyRepository.findStudyWithManagerByPath(path);
         Event event = eventRepository.findById(eventId).orElseThrow();
         model.addAttribute(account);
         model.addAttribute(study);

@@ -7,10 +7,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -25,7 +21,7 @@ public class EventService {
 
 
     public Event createEvent(Event event, Account account, Study study) {
-        event.setCreateBy(account);
+        event.setCreatedBy(account);
         event.setCreateDateTime(LocalDateTime.now());
         event.setStudy(study);
         return eventRepository.save(event);
