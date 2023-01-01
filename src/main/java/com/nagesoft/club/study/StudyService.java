@@ -200,6 +200,18 @@ public class StudyService {
         return eventRepository.findByStudy(study);
     }
 
+    public Study getStudyToEnroll(String path) {
+        Study study = studyRepository.findStudyOnlyByPath(path);
+        checkIfExistingStudy(path, study);
+        return study;
+    }
+
+//    private void checkIfExistingStudy(String path, Study study) {
+//        if (study == null) {
+//            throw new IllegalArgumentException(path + "에 해당하는 스터디가 없습니다.");
+//        }
+//    }
+
 //    public void getStudyTags(Study study) {
 //        tagRepository.
 //    }

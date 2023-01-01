@@ -9,4 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
     boolean existsByAccountAndEvent(Account account, Event event);
+
+    Enrollment findByEventAndAccount(Event event, Account account);
 }

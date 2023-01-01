@@ -2,6 +2,7 @@ package com.nagesoft.club.event;
 
 import com.nagesoft.club.domain.*;
 import com.nagesoft.club.event.form.EventForm;
+import com.nagesoft.club.study.StudyRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class EventService {
     private final EventRepository eventRepository;
     private final ModelMapper modelMapper;
     private final EnrollmentRepository enrollmentRepository;
+//    private final StudyRepository studyRepository;
 
 
     public Event createEvent(Event event, Account account, Study study) {
@@ -56,6 +58,15 @@ public class EventService {
             event.addEnrollment(enrollment);
             enrollmentRepository.save(enrollment);
 //        event.getEnrollments().add(enrollment);
+        }
+    }
+
+    public void cancelEnrollment(Event event, Account account) {
+        Enrollment enrollment = enrollmentRepository.findByEventAndAccount(event, account);
+        if (!enrollment.isAttended()) {
+            event.removeEnrollment(enrollment);
+            enrollmentRepository.delete(enrollment);
+            event.acceptNextWaitingEnrollment();
         }
     }
 

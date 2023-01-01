@@ -129,4 +129,13 @@ public class EventController {
 
         return "redirect:/study/" + study.getEncodePath() + "/events/" + event.getId();
     }
+
+    @PostMapping("/events/{id}/disenroll")
+    public String cancelEnrollment(@CurrentAccount Account account,
+                                   @PathVariable String path, @PathVariable("id") Event event) {
+        Study study = studyService.getStudyToEnroll(path);
+        eventService.cancelEnrollment(event, account);
+        return "redirect:/study/" + study.getEncodePath() + "/events/" + event.getId();
+    }
+
 }
