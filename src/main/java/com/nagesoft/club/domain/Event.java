@@ -54,7 +54,7 @@ public class Event {
     }
 
     public boolean isDisenrollableFor(UserAccount userAccount) {
-        return isNotClosed() && isAlreadyEnrolled(userAccount);
+        return isNotClosed() && isAlreadyEnrolled(userAccount) && !isAttended(userAccount);
     }
 
     private boolean isNotClosed() {
@@ -148,5 +148,20 @@ public class Event {
         }
 
         return null;
+    }
+
+    public void acceptEnrollment(Enrollment enrollment) {
+        if(this.eventType == EventType.CONFIRMATIVE
+            && this.numberOfRemainSpots() > 0 ) {
+//            && !this.enrollments.contains(enrollment) ) {
+            enrollment.setAccepted(true);
+        }
+    }
+
+    public void rejectEnrollment(Enrollment enrollment) {
+        if(this.eventType == EventType.CONFIRMATIVE
+            && this.enrollments.contains(enrollment)) {
+            enrollment.setAccepted(false);
+        }
     }
 }

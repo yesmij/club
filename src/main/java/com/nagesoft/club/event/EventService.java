@@ -2,7 +2,6 @@ package com.nagesoft.club.event;
 
 import com.nagesoft.club.domain.*;
 import com.nagesoft.club.event.form.EventForm;
-import com.nagesoft.club.study.StudyRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -70,4 +69,22 @@ public class EventService {
         }
     }
 
+    public void acceptEnrollment(Event event, Enrollment enrollment) {
+        event.acceptEnrollment(enrollment);
+//        if(!enrollment.isAccepted()) {
+//            enrollment.setAccepted(true);
+//        }
+    }
+
+    public void rejectEnrollment(Event event, Enrollment enrollment) {
+        event.rejectEnrollment(enrollment);
+    }
+
+    public void checkInEnrollment(Enrollment enrollment) {
+        enrollment.setAttended(true);
+    }
+
+    public void cancelCheckInEnrollment(Enrollment enrollment) {
+        enrollment.setAttended(false);
+    }
 }
