@@ -1,4 +1,4 @@
-package com.nagesoft.club.event;
+package com.nagesoft.club.modules;
 
 import com.nagesoft.club.modules.account.Account;
 import com.nagesoft.club.modules.account.AccountRepository;

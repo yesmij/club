@@ -1,4 +1,4 @@
-package com.nagesoft.club.study;
+package com.nagesoft.club.modules.study;
 
 import com.nagesoft.club.modules.account.Account;
 import com.nagesoft.club.modules.account.AccountRepository;

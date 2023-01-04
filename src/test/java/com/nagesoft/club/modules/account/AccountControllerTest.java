@@ -1,4 +1,4 @@
-package com.nagesoft.club.account;
+package com.nagesoft.club.modules.account;
 
 import com.nagesoft.club.modules.account.Account;
 import com.nagesoft.club.modules.account.AccountRepository;

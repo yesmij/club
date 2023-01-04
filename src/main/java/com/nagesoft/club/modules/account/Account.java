@@ -1,5 +1,6 @@
 package com.nagesoft.club.modules.account;
 
+import com.nagesoft.club.modules.study.Study;
 import com.nagesoft.club.modules.tag.Tag;
 import com.nagesoft.club.modules.zone.Zone;
 import lombok.*;
@@ -68,6 +69,7 @@ public class Account {
         this.emailVerified = true;
         this.joinedAt = LocalDateTime.now();
     }
+
 
     //    public boolean isManagerOf(Study study) {
     //        return study.getManagers().contains(this);
