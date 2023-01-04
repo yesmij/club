@@ -1,11 +1,14 @@
 package com.nagesoft.club.study;
 
-import com.nagesoft.club.account.AccountRepository;
-import com.nagesoft.club.account.AccountService;
-import com.nagesoft.club.account.SignUpForm;
-import com.nagesoft.club.domain.Account;
-import com.nagesoft.club.domain.Study;
-import com.nagesoft.club.study.form.StudyForm;
+import com.nagesoft.club.modules.account.Account;
+import com.nagesoft.club.modules.account.AccountRepository;
+import com.nagesoft.club.modules.account.AccountService;
+import com.nagesoft.club.modules.account.CurrentAccount;
+import com.nagesoft.club.modules.account.form.SignUpForm;
+import com.nagesoft.club.modules.study.Study;
+import com.nagesoft.club.modules.study.StudyRepository;
+import com.nagesoft.club.modules.study.StudyService;
+import com.nagesoft.club.modules.study.form.StudyForm;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,10 +34,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 class StudyControllerTest {
 
-    @Autowired StudyRepository studyRepository;
+    @Autowired
+    StudyRepository studyRepository;
     @Autowired AccountService accountService;
     @Autowired AccountRepository accountRepository;
-    @Autowired StudyService studyService;
+    @Autowired
+    StudyService studyService;
     @Autowired ModelMapper modelMapper;
     @Autowired MockMvc mockMvc;
 

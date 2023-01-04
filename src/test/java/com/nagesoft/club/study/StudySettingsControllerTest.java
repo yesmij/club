@@ -1,12 +1,14 @@
 package com.nagesoft.club.study;
 
-import com.nagesoft.club.account.AccountRepository;
-import com.nagesoft.club.account.AccountService;
-import com.nagesoft.club.account.SignUpForm;
-import com.nagesoft.club.domain.Account;
-import com.nagesoft.club.domain.Study;
-import com.nagesoft.club.study.form.StudyDescriptionForm;
-import com.nagesoft.club.study.form.StudyForm;
+import com.nagesoft.club.modules.account.Account;
+import com.nagesoft.club.modules.account.AccountRepository;
+import com.nagesoft.club.modules.account.AccountService;
+import com.nagesoft.club.modules.account.CurrentAccount;
+import com.nagesoft.club.modules.account.form.SignUpForm;
+import com.nagesoft.club.modules.study.Study;
+import com.nagesoft.club.modules.study.StudyRepository;
+import com.nagesoft.club.modules.study.StudyService;
+import com.nagesoft.club.modules.study.form.StudyForm;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,17 +17,12 @@ import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.InitBinder;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -38,8 +35,10 @@ class StudySettingsControllerTest {
 
     @Autowired AccountRepository accountRepository;
     @Autowired AccountService accountService;
-    @Autowired StudyService studyService;
-    @Autowired StudyRepository studyRepository;
+    @Autowired
+    StudyService studyService;
+    @Autowired
+    StudyRepository studyRepository;
     @Autowired ModelMapper modelMapper;
     @Autowired MockMvc mockMvc;
 

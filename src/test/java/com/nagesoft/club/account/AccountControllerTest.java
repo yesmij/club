@@ -1,19 +1,20 @@
 package com.nagesoft.club.account;
 
-import com.nagesoft.club.domain.Account;
-import com.nagesoft.club.mail.EmailMessage;
-import com.nagesoft.club.mail.EmailService;
+import com.nagesoft.club.modules.account.Account;
+import com.nagesoft.club.modules.account.AccountRepository;
+import com.nagesoft.club.modules.account.AccountService;
+import com.nagesoft.club.modules.account.CurrentAccount;
+import com.nagesoft.club.modules.account.form.SignUpForm;
+import com.nagesoft.club.infra.mail.EmailMessage;
+import com.nagesoft.club.infra.mail.EmailService;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +25,6 @@ import static org.mockito.BDDMockito.then;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;

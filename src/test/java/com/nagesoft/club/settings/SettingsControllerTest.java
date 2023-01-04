@@ -1,13 +1,14 @@
 package com.nagesoft.club.settings;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nagesoft.club.account.AccountRepository;
-import com.nagesoft.club.account.AccountService;
-import com.nagesoft.club.account.SignUpForm;
-import com.nagesoft.club.tag.TagRepository;
-import com.nagesoft.club.domain.Account;
-import com.nagesoft.club.domain.Tag;
-import com.nagesoft.club.tag.TagForm;
+import com.nagesoft.club.modules.account.Account;
+import com.nagesoft.club.modules.account.AccountRepository;
+import com.nagesoft.club.modules.account.AccountService;
+import com.nagesoft.club.modules.account.CurrentAccount;
+import com.nagesoft.club.modules.account.form.SignUpForm;
+import com.nagesoft.club.modules.tag.TagRepository;
+import com.nagesoft.club.modules.tag.Tag;
+import com.nagesoft.club.modules.tag.TagForm;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
