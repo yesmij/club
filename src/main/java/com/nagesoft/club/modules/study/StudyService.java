@@ -4,6 +4,7 @@ import com.nagesoft.club.modules.account.Account;
 import com.nagesoft.club.modules.account.CurrentAccount;
 import com.nagesoft.club.modules.event.Event;
 import com.nagesoft.club.modules.event.EventRepository;
+import com.nagesoft.club.modules.study.event.StudyCreatedEvent;
 import com.nagesoft.club.modules.study.form.StudyDescriptionForm;
 import com.nagesoft.club.modules.study.form.StudyForm;
 import com.nagesoft.club.modules.tag.Tag;
@@ -11,6 +12,7 @@ import com.nagesoft.club.modules.tag.TagRepository;
 import com.nagesoft.club.modules.zone.Zone;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,12 +28,14 @@ public class StudyService {
     private final ModelMapper modelMapper;
     private final TagRepository tagRepository;
     private final EventRepository eventRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public Study createStudy(Study study, Account account) {
         Study savedStudy = studyRepository.save(study);
 //        Account accountGetOne =  accountRepository.getOne(account.getId());
         //savedStudy.getManagers().add(account);  // todo Account로 변경!!
         savedStudy.addManager(account);
+        applicationEventPublisher.publishEvent(new StudyCreatedEvent(savedStudy));
         return savedStudy;
     }
 
