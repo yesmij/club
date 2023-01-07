@@ -35,7 +35,6 @@ public class StudyService {
 //        Account accountGetOne =  accountRepository.getOne(account.getId());
         //savedStudy.getManagers().add(account);  // todo Account로 변경!!
         savedStudy.addManager(account);
-        applicationEventPublisher.publishEvent(new StudyCreatedEvent(savedStudy));
         return savedStudy;
     }
 
@@ -133,6 +132,7 @@ public class StudyService {
 
     public void publishStudy(Study study) {
         study.publish();
+        applicationEventPublisher.publishEvent(new StudyCreatedEvent(study));
     }
 
     public void closeStudy(Study study) {
