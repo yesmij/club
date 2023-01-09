@@ -21,7 +21,6 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Slf4j
 @Transactional
@@ -81,7 +80,7 @@ public class StudyEventListener {
         notification.setLink("/study/" + study.getEncodePath());
         notification.setMessage(study.getShortDescription());
         notification.setTitle(study.getTitle());
-        notification.setCreatedLocalDateTime(LocalDateTime.now());
+        notification.setCreatedDateTime(LocalDateTime.now());
         notificationRepository.save(notification);
     }
 
