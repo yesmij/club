@@ -5,7 +5,7 @@
 
 <head th:fragment="head">
     <meta charset="UTF-8">
-    <title>yokoso club!</title>
+    <title>StudyOlle</title>
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,400,500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.min.css" />
@@ -169,7 +169,7 @@
 </script>
 
 <div th:fragment="study-banner" th:if="${study.useBanner}" class="row" id="study-logo">
-    <img th:src="${study.profileImage}"/>
+    <img th:src="${study.image}"/>
 </div>
 
 <div th:fragment="study-info">
@@ -577,5 +577,16 @@
         </form>
     </div>
 </div>
+
+<ul th:fragment="notification-list (notifications)" class="list-group list-group-flush">
+    <a href="#" th:href="@{${noti.link}}" th:each="noti: ${notifications}"
+       class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+            <small class="text-muted" th:text="${noti.title}">Noti title</small>
+            <small class="fromNow text-muted" th:text="${noti.createdDateTime}">3 days ago</small>
+        </div>
+        <p th:text="${noti.message}" class="text-left mb-0 mt-1">message</p>
+    </a>
+</ul>
 
 </html>

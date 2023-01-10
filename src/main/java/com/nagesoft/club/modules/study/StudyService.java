@@ -5,6 +5,7 @@ import com.nagesoft.club.modules.account.CurrentAccount;
 import com.nagesoft.club.modules.event.Event;
 import com.nagesoft.club.modules.event.EventRepository;
 import com.nagesoft.club.modules.study.event.StudyCreatedEvent;
+import com.nagesoft.club.modules.study.event.StudyUpdatedEvent;
 import com.nagesoft.club.modules.study.form.StudyDescriptionForm;
 import com.nagesoft.club.modules.study.form.StudyForm;
 import com.nagesoft.club.modules.tag.Tag;
@@ -44,6 +45,7 @@ public class StudyService {
 //        study.setShortDescription(studyDescriptionForm.getShortDescription());
 //        study.setFullDescription(studyDescriptionForm.getFullDescription());
         modelMapper.map(studyDescriptionForm, study);
+        applicationEventPublisher.publishEvent(new StudyUpdatedEvent(study, "스터디 정보를 변경했습니다.!"));
     }
 
     public Study getStudyToUpdate(String path, Account account) {
@@ -137,14 +139,17 @@ public class StudyService {
 
     public void closeStudy(Study study) {
         study.close();
+        applicationEventPublisher.publishEvent(new StudyUpdatedEvent(study, "스터디가 종료되었습니다.!"));
     }
 
     public void startRecruitStudy(Study study) {
         study.startRecruit();
+        applicationEventPublisher.publishEvent(new StudyUpdatedEvent(study, "스터디가 팀원을 모집합니다.!"));
     }
 
     public void stopRecruitStudy(Study study) {
         study.stopRecruit();
+        applicationEventPublisher.publishEvent(new StudyUpdatedEvent(study, "스터디가 팀원모집을 종료합니다.!"));
     }
 
     public void updateTitle(Study study, String newTitle) {
