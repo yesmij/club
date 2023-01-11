@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public class WebConfig implements WebMvcConfigurer {
 
     private final NotificationInterceptor notificationInterceptor;
+//    private final EnrollmentInterceptor enrollmentInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -25,6 +26,7 @@ public class WebConfig implements WebMvcConfigurer {
         staticResourcesPath.add("/node_modules/**");
 
         registry.addInterceptor(notificationInterceptor)
+//                .addInterceptor(enrollmentInterceptor)
                 .excludePathPatterns(staticResourcesPath);
     }
 }

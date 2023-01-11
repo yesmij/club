@@ -1,8 +1,10 @@
 package com.nagesoft.club.modules.event;
 
 import com.nagesoft.club.modules.account.Account;
+import com.nagesoft.club.modules.event.event.EnrollmentAcceptedEvent;
 import com.nagesoft.club.modules.event.event.EnrollmentEvent;
 import com.nagesoft.club.modules.event.event.EnrollmentEventListener;
+import com.nagesoft.club.modules.event.event.EnrollmentRejectedEvent;
 import com.nagesoft.club.modules.event.form.EventForm;
 import com.nagesoft.club.modules.study.Study;
 import com.nagesoft.club.modules.study.event.StudyUpdatedEvent;
@@ -84,6 +86,7 @@ public class EventService {
 
     public void acceptEnrollment(Event event, Enrollment enrollment) {
         event.acceptEnrollment(enrollment);
+        applicationEventPublisher.publishEvent(new EnrollmentAcceptedEvent(enrollment));
 //        if(!enrollment.isAccepted()) {
 //            enrollment.setAccepted(true);
 //        }
@@ -91,6 +94,7 @@ public class EventService {
 
     public void rejectEnrollment(Event event, Enrollment enrollment) {
         event.rejectEnrollment(enrollment);
+        applicationEventPublisher.publishEvent(new EnrollmentRejectedEvent(enrollment));
     }
 
     public void checkInEnrollment(Enrollment enrollment) {
